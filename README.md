@@ -16,5 +16,9 @@ ___
      ```clone
      git clone yourlink.git
      ```
-     In this example replace "yourlink.git" with the web URL that you copied.
+   - In this example replace "yourlink.git" with the web URL that you copied.
+     ![image](https://github.com/user-attachments/assets/f772dfbf-df69-4ff5-98e2-e0427655cbec)
+   - Once that is done you will be able to see the repository in your local device
+     ![image](https://github.com/user-attachments/assets/0599c411-bb96-4967-84f2-e9098adc9604)
+
      
