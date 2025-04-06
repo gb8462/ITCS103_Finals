@@ -28,7 +28,16 @@ ___
 ## Git:
 
 Assuming you want to push your changes to your forked repository:
-   1. git add .
-   2. git commit -m 'your message'
-   3. git push -u origin main
+   1. open terminal in vs code (or in any code editor that you use)
+      ![example1](https://github.com/user-attachments/assets/f1f9e447-101f-4ab6-a845-c8128927ed6c)
+
+   2. git add .
+      ![example2](https://github.com/user-attachments/assets/3df35888-d361-42f6-89bf-e19218254435)
+
+   3. git commit -m 'your message here' (may quotation lagi yun btw)
+      ![exampl4](https://github.com/user-attachments/assets/84e554c7-0be1-4bb6-b9af-15199573b39e)
+      ![example3](https://github.com/user-attachments/assets/1ddc2e0a-fab6-48b2-9079-6fe0f2034857)
+
+   4. git push -u origin main (pag mag naglabas na green instead of error na nakikita nyo sa pic example then oks na yun ฅ^•ﻌ•^ฅ) -Ren
+      ![sample5](https://github.com/user-attachments/assets/e41d5fa1-cc83-4010-8503-0b63e88d28d9)
 
