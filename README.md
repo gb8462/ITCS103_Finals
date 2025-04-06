@@ -38,6 +38,6 @@ Assuming you want to push your changes to your forked repository:
       ![exampl4](https://github.com/user-attachments/assets/84e554c7-0be1-4bb6-b9af-15199573b39e)
       ![example3](https://github.com/user-attachments/assets/1ddc2e0a-fab6-48b2-9079-6fe0f2034857)
 
-   4. git push -u origin main (pag mag naglabas na green instead of error na nakikita nyo sa pic example then oks na yun ฅ^•ﻌ•^ฅ) -Ren
+   4. git push -u origin main (pag mag naglabas na green instead of error na nakikita nyo sa pic example then oks na yun.) -Ren
       ![sample5](https://github.com/user-attachments/assets/e41d5fa1-cc83-4010-8503-0b63e88d28d9)
 
