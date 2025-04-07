@@ -63,3 +63,11 @@ Here's how to merge a pull request:
    
    3. Then reopen it and confirm merge
       ![sample4](https://github.com/user-attachments/assets/5e313ccc-1f80-448b-8cdf-2f9dbd8e419f)
+
+___
+
+## How to Sync Fork:
+
+If you want to update your forked repository:
+
+![image](https://github.com/user-attachments/assets/0f521332-772f-494a-8ee3-55599b423b8e)
