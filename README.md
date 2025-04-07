@@ -42,7 +42,7 @@ ___
 
 ## Creating a Pull Request:
 
-Assuming you want to submit your push changes to your forked repo:
+Assuming you want to submit your push changes to your forked repository:
 
    1. Open a Pull Request
       ![sample1](https://github.com/user-attachments/assets/62d817ad-5d9f-4155-92cd-1d5d906c242f)
@@ -50,3 +50,16 @@ Assuming you want to submit your push changes to your forked repo:
    2. Add Title and description then click Create pull request
       ![sample2](https://github.com/user-attachments/assets/cb97ca28-b51e-437d-ba3d-4ec560ad95f0)
 
+___
+
+## Merging a Pull Request:
+
+Here's how to merge a pull request:
+
+   1. Wait for it to load then click Merge Pull Request
+      ![sample3](https://github.com/user-attachments/assets/44e75da1-3258-45b3-8712-8a1694d642e4)
+
+   2. If it doesn't load, cancel the merging process
+   
+   3. Then reopen it and confirm merge
+      ![sample4](https://github.com/user-attachments/assets/5e313ccc-1f80-448b-8cdf-2f9dbd8e419f)
