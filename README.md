@@ -38,4 +38,15 @@ Assuming you want to push your changes to your forked repository:
    4. git push -u origin main (pag mag naglabas na green instead of error na nakikita nyo sa pic example then oks na yun.) -Ren
      ![Screenshot 2025-04-07 155105](https://github.com/user-attachments/assets/3e0c5546-bd3f-4131-bae9-72f4b11b119d)
 
+___
+
+## Creating a Pull Request:
+
+Assuming you want to submit your push changes to your forked repo:
+
+   1. Open a Pull Request
+      ![sample1](https://github.com/user-attachments/assets/62d817ad-5d9f-4155-92cd-1d5d906c242f)
+   
+   2. Add Title and description then click Create pull request
+      ![sample2](https://github.com/user-attachments/assets/cb97ca28-b51e-437d-ba3d-4ec560ad95f0)
 
