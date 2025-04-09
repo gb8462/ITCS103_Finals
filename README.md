@@ -35,7 +35,7 @@ Assuming you want to push your changes to your forked repository:
    3. git commit -m 'your message here' (any message basta may quotation)
       ![Screenshot 2025-04-07 155057](https://github.com/user-attachments/assets/1b74b793-d135-4a76-b20a-a4c3389da211)
 
-   4. git push -u origin main (pag mag naglabas na green instead of error na nakikita nyo sa pic example then oks na yun.) -Ren
+   4. git push -u origin main <br>
      ![Screenshot 2025-04-07 155105](https://github.com/user-attachments/assets/3e0c5546-bd3f-4131-bae9-72f4b11b119d)
 
 ___
