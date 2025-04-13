@@ -9,5 +9,4 @@ window.title("Group2 Finals Project!")
 
 # widgets
 
-
 window.mainloop()
