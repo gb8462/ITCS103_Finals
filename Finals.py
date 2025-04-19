@@ -7,6 +7,11 @@ window = tk.Tk()
 window.geometry("500x500")
 window.title("Group2 Finals Project!")
 
+frame = ttk.Frame(window)
+
 # widgets
 
 window.mainloop()
+
+
+#TRY TRY TRY
