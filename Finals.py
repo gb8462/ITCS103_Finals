@@ -1,15 +1,21 @@
 import tkinter as tk
 from tkinter import ttk
+from Modules import (Home)
 
 window = tk.Tk()
 window.geometry("700x500")
 window.title("Quiz App!")
+window.configure(bg="#353A3E")
 
-frame = ttk.Frame(window)
+# Functions
+def handle_click(event):
+    Home.home()
 
 # widgets
 
+button = tk.Button(window, text="Login")
+
+button.bind("<Button-1>", handle_click)
+button.pack(pady=100)
+
 window.mainloop()
-
-
-#TRY TRY TRY
