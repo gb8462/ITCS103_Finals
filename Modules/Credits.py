@@ -9,3 +9,4 @@ def credits(root):
     
     label = ttk.Label(root, text="Credits", font=("Arial", 30),foreground="#EAEAEA",background="#353A3E")
     label.pack(pady=20)
+

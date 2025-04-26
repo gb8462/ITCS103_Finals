@@ -9,3 +9,5 @@ def makeQuiz(root):
     
     label = ttk.Label(root, text="Create A Quiz", font=("Arial", 30),foreground="#EAEAEA",background="#353A3E")
     label.pack(pady=20)
+
+    
