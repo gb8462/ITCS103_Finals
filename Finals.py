@@ -51,20 +51,23 @@ def clear_window():
 def login_screen():
     clear_window()
 
-    label = ttk.Label(window, text="TryQuizMe Login", font=("Roboto", 30), foreground="#EAEAEA", background="#353A3E")
+    label = ttk.Label(window, text="TryQuizMe", font=("Roboto", 30), foreground="#EAEAEA", background="#353A3E")
     label.pack(pady=25)
+    label = tk.Label(window, text="Login", font=("Arial",20), foreground="#EAEAEA", background="#353A3E")
+    label.pack(pady=5)
+
 
     tk.Label(window, text="Username:", bg="#353A3E", fg="#EAEAEA").pack()
     global username_entry
-    username_entry = tk.Entry(window)
-    username_entry.pack()
+    username_entry = tk.Entry(window,width=40)
+    username_entry.pack(pady=5)
 
     tk.Label(window, text="Password:", bg="#353A3E", fg="#EAEAEA").pack()
     global password_entry
-    password_entry = tk.Entry(window, show="*")
-    password_entry.pack()
+    password_entry = tk.Entry(window, width=40,show="*")
+    password_entry.pack(pady=5)
 
-    tk.Button(window, text="Sign In", width=20, command=sign_in).pack(pady=10)
+    tk.Button(window, text="Sign In", width=20, command=sign_in).pack(pady=15)
     tk.Button(window, text="Sign Up", width=20, command=sign_up).pack(pady=5)
 
 def sign_in():
