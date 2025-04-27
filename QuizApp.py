@@ -14,9 +14,17 @@ dashboard.pack(pady=(5,20), padx=10, fill="both",side='left')
 label = customtkinter.CTkLabel(dashboard,text="QuizMe",font=('Arial',35), text_color='#101010')
 label.pack(pady=(15,15), padx=70)
 
-label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',18), text_color='#101010')
-label.pack(pady=(30,5), padx=70)
+label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',17), text_color='#101010')
+label.pack(pady=(25,0), padx=70)
 
+dif = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
+dif.pack(pady=0, padx=1)
+
+label = customtkinter.CTkLabel(dashboard,text="Category",font=('Arial',17), text_color='#101010')
+label.pack(pady=(25,0), padx=70)
+
+cat = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
+cat.pack(pady=0, padx=1)
 
 sideboard = customtkinter.CTkFrame(main, corner_radius=10,fg_color='#dee0e0')
 sideboard.pack(pady=(5,20), padx=(0,10), side='right',fill="both", expand=True)
