@@ -17,14 +17,14 @@ label.pack(pady=(15,15), padx=70)
 label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',17), text_color='#101010')
 label.pack(pady=(25,0), padx=70)
 
-dif = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
-dif.pack(pady=0, padx=1)
+difficulty = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
+difficulty.pack(pady=0, padx=1)
 
 label = customtkinter.CTkLabel(dashboard,text="Category",font=('Arial',17), text_color='#101010')
 label.pack(pady=(25,0), padx=70)
 
-cat = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
-cat.pack(pady=0, padx=1)
+category = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='gray',height=230)
+category.pack(pady=0, padx=1)
 
 sideboard = customtkinter.CTkFrame(main, corner_radius=10,fg_color='#dee0e0')
 sideboard.pack(pady=(5,20), padx=(0,10), side='right',fill="both", expand=True)
