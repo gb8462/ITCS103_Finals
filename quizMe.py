@@ -1,7 +1,7 @@
 import customtkinter
 
 main = customtkinter.CTk()
-main.title("TryQuizMe")
+main.title("QuizMe")
 main.geometry("1100x680")
 customtkinter.set_appearance_mode("dark")
 
