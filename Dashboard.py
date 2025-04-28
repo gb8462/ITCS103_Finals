@@ -14,7 +14,7 @@ topbar.pack(pady=0, padx=10, fill="both")
 label = customtkinter.CTkLabel(topbar, text="TryQuizMe",font=('Arial',25))
 label.pack(pady=10,padx=(50,0), side='left')
 
-label = customtkinter.CTkLabel(topbar, text="username",font=('Arial',22))
+label = customtkinter.CTkLabel(topbar, text="username",font=('Arial',18))
 label.pack(pady=10,padx=(0,30), side='right')
 
 # Dashboard
