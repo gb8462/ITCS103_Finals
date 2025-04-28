@@ -17,6 +17,7 @@ def clear_frame():
     for widget in login_frame.winfo_children():
         widget.destroy()
 
+
 def login():
     clear_frame()
 
