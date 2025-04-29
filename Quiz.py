@@ -103,19 +103,27 @@ def signUp_page():
     confirm_password_entry = customtkinter.CTkEntry(signup_frame, placeholder_text="Confirm Password", width=230, corner_radius=15, show="*")
     confirm_password_entry.pack(pady=(10, 20))
 
+    error_label = customtkinter.CTkLabel(signup_frame, text="", text_color="red")
+    error_label.pack()
+
+# ========== Creating Account ==========
     def create_account():
         username = username_entry.get()
         password = password_entry.get()
         confirm_password = confirm_password_entry.get()
-
-        if password != confirm_password:
-            customtkinter.CTkLabel(signup_frame, text="Passwords don't match", text_color="red").pack()
+    
+        if not username or not password or not confirm_password:
+            error_label.configure(text="Please fill in all fields!")
             return
-
+    
+        if password != confirm_password:
+            error_label.configure(text="Passwords don't match!")
+            return
+    
         if save_account(username, password):
-            customtkinter.CTkLabel(signup_frame, text="Account created!", text_color="green").pack()
+            error_label.configure(text="Account created!", text_color="green")
         else:
-            customtkinter.CTkLabel(signup_frame, text="Username already exists!", text_color="red").pack()
+            error_label.configure(text="Username already exists!")
 
     create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=create_account)
     create_account_button.pack(pady=(5, 10))
