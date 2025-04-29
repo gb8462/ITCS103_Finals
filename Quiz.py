@@ -1,4 +1,6 @@
 import customtkinter
+import openpyxl
+import os
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -6,6 +8,41 @@ main.geometry("1100x680")
 customtkinter.set_appearance_mode("dark")
 
 main.configure(fg_color="#1f2024")
+
+
+# ========== openpyxl ==========
+def initialize_database():
+    if not os.path.exists("users.xlsx"):
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        sheet.title = "Users"
+        sheet.append(["Username", "Password"])
+        workbook.save("users.xlsx")
+
+def save_account(username, password):
+    workbook = openpyxl.load_workbook("users.xlsx")
+    sheet = workbook.active
+
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        if row[0] == username:
+            return False
+
+    sheet.append([username, password])
+    workbook.save("users.xlsx")
+    return True
+
+def check_login(username, password):
+    workbook = openpyxl.load_workbook("users.xlsx")
+    sheet = workbook.active
+
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        if row[0] == username and row[1] == password:
+            return True
+    return False
+
+# ========== Window Close ==========
+def close_window():
+    main.destroy()
 
 # ========== Clear Frame Function ==========
 def clear_frame():
@@ -30,7 +67,13 @@ def login_page():
     password_entry.pack(pady=(10, 20))
 
     def on_login():
-        Dashboard()
+        username = username_entry.get()
+        password = password_entry.get()
+
+        if check_login(username, password):
+            Dashboard()
+        else:
+            customtkinter.CTkLabel(login_frame, text="Invalid username or password", text_color="red").pack()
 
     login_button = customtkinter.CTkButton(login_frame, text="Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_login)
     login_button.pack()
@@ -60,7 +103,21 @@ def signUp_page():
     confirm_password_entry = customtkinter.CTkEntry(signup_frame, placeholder_text="Confirm Password", width=230, corner_radius=15, show="*")
     confirm_password_entry.pack(pady=(10, 20))
 
-    create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20,text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e')
+    def create_account():
+        username = username_entry.get()
+        password = password_entry.get()
+        confirm_password = confirm_password_entry.get()
+
+        if password != confirm_password:
+            customtkinter.CTkLabel(signup_frame, text="Passwords don't match", text_color="red").pack()
+            return
+
+        if save_account(username, password):
+            customtkinter.CTkLabel(signup_frame, text="Account created!", text_color="green").pack()
+        else:
+            customtkinter.CTkLabel(signup_frame, text="Username already exists!", text_color="red").pack()
+
+    create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=create_account)
     create_account_button.pack(pady=(5, 10))
 
     go_back_button = customtkinter.CTkButton(signup_frame, text="Go back", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
@@ -136,11 +193,9 @@ def quizMe():
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
 
-# ========== Window Close ==========
-def close_window():
-    main.destroy()
 
 # ========== Start ==========
+initialize_database()
 login_page()
 
 main.mainloop()
