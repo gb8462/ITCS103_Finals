@@ -111,21 +111,23 @@ def quizMe():
     label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',17), text_color='#101010')
     label.pack(pady=(25,0), padx=(0,135))
 
+# ========== Difficulty ==========
     difficulty = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
     difficulty.pack()
 
     for diff in ["All Difficulty", "Easy", "Medium", "Hard"]:
-        button = customtkinter.CTkButton(difficulty, text=diff, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010')
+        button = customtkinter.CTkButton(difficulty, text=diff, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.pack(pady=1, padx=1)
 
     label = customtkinter.CTkLabel(dashboard,text="Category",font=('Arial',17), text_color='#101010')
     label.pack(pady=(25,0), padx=(0,135))
 
+# ========== Category ==========
     category = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
     category.pack(pady=0, padx=1)
 
     for cat in ["All Category", "General Skills", "Web Development", "Cryptography", "Python"]:
-        button = customtkinter.CTkButton(category, text=cat, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010')
+        button = customtkinter.CTkButton(category, text=cat, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.pack(pady=1, padx=1)
 
     button = customtkinter.CTkButton(dashboard, text='Go Back', command=Dashboard)
