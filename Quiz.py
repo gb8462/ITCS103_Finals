@@ -111,15 +111,15 @@ def signUp_page():
         username = username_entry.get()
         password = password_entry.get()
         confirm_password = confirm_password_entry.get()
-    
+
         if not username or not password or not confirm_password:
             error_label.configure(text="Please fill in all fields!")
             return
-    
+
         if password != confirm_password:
             error_label.configure(text="Passwords don't match!")
             return
-    
+
         if save_account(username, password):
             error_label.configure(text="Account created!", text_color="green")
         else:
@@ -167,6 +167,8 @@ def quizMe():
     main.title("QuizMe")
     main.configure(fg_color="#010101")
 
+
+# ========== Difficulty ==========
     dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0', width=300)
     dashboard.pack(pady=(5,20), padx=10, fill="both",side='left')
 
@@ -176,7 +178,6 @@ def quizMe():
     label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',17), text_color='#101010')
     label.pack(pady=(25,0), padx=(0,135))
 
-# ========== Difficulty ==========
     difficulty = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
     difficulty.pack()
 
@@ -198,8 +199,13 @@ def quizMe():
     button = customtkinter.CTkButton(dashboard, text='Go Back', command=Dashboard)
     button.pack(pady=(25,0))
 
+# ========== Quiz Available ==========
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
+
+    for quiz in ["Python", "Terminal", "git"]:
+        button = customtkinter.CTkButton(Quiz, text=quiz, anchor='n', height=200, width=200,corner_radius=20, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
+        button.pack(pady=(15,15),padx=(15,15), side='left')
 
 
 # ========== Start ==========
