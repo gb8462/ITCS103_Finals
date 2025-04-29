@@ -30,7 +30,6 @@ def login_page():
     password_entry.pack(pady=(10, 20))
 
     def on_login():
-        # Later you can check username/password here if you want
         Dashboard()
 
     login_button = customtkinter.CTkButton(login_frame, text="Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_login)
