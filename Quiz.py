@@ -204,8 +204,8 @@ def quizMe():
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
 
     for quiz in ["Python", "Terminal", "git"]:
-        button = customtkinter.CTkButton(Quiz, text=quiz, anchor='n', height=200, width=200,corner_radius=20, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
-        button.pack(pady=(15,15),padx=(15,15), side='left')
+        button = customtkinter.CTkButton(Quiz, text=quiz, anchor='n', height=150, width=150,corner_radius=20, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
+        button.grid(padx=10, pady=10)
 
 
 # ========== Start ==========
