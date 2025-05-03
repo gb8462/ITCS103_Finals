@@ -9,7 +9,6 @@ customtkinter.set_appearance_mode("dark")
 
 main.configure(fg_color="#1f2024")
 
-# Added Encryption for password and requirements for it
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
