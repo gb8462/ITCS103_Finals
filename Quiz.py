@@ -51,6 +51,8 @@ def clear_frame():
         widget.destroy()
 
 # ========== Login Page ==========
+current_user = ""
+
 def login_page():
     clear_frame()
     
@@ -66,15 +68,23 @@ def login_page():
     password_entry = customtkinter.CTkEntry(login_frame, placeholder_text="Password", width=230, corner_radius=15, show="*")
     password_entry.pack(pady=(10, 20))
 
+    error_label = customtkinter.CTkLabel(login_frame, text="", text_color="red")
+    error_label.pack()
+
     def on_login():
+        global current_user
+
         username = username_entry.get()
         password = password_entry.get()
 
         if check_login(username, password):
+            current_user = username 
             Dashboard()
         else:
-            customtkinter.CTkLabel(login_frame, text="Invalid username or password", text_color="red").pack()
-
+            error_label.configure(text="Invalid username or password")
+    
+    main.bind('<Return>', lambda event: on_login()) # Bind Enter key to login
+    
     login_button = customtkinter.CTkButton(login_frame, text="Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_login)
     login_button.pack()
 
@@ -124,6 +134,14 @@ def signUp_page():
             error_label.configure(text="Account created!", text_color="green")
         else:
             error_label.configure(text="Username already exists!")
+        
+        if save_account(username, password):
+            error_label.configure(text="Account created!", text_color="green")
+            username_entry.delete(0, 'end')
+            password_entry.delete(0, 'end')
+            confirm_password_entry.delete(0, 'end')
+
+    main.bind('<Return>', lambda event: create_account()) # Bind Enter key to create account
 
     create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=create_account)
     create_account_button.pack(pady=(5, 10))
@@ -143,7 +161,7 @@ def Dashboard():
     label = customtkinter.CTkLabel(topbar, text="TryQuizMe",font=('Arial',25))
     label.pack(pady=10,padx=(50,0), side='left')
 
-    label = customtkinter.CTkLabel(topbar, text="username",font=('Arial',18))
+    label = customtkinter.CTkLabel(topbar, text=current_user, font=('Arial',18))
     label.pack(pady=10,padx=(0,30), side='right')
 
     background = customtkinter.CTkFrame(main, fg_color="#f0f0f0",corner_radius=0,height=400)
