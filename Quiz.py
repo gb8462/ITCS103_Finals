@@ -1,6 +1,6 @@
 import customtkinter
 import openpyxl
-import os
+import hashlib, os, re
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -9,6 +9,24 @@ customtkinter.set_appearance_mode("dark")
 
 main.configure(fg_color="#1f2024")
 
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def valid_username(username):
+    return re.match("^[A-Za-z0-9_]{4,}$", username) is not None
+
+def strong_password(password):
+    if len(password) < 6:
+        return False
+    if not re.search(r"[A-Z]", password):
+        return False
+    if not re.search(r"[a-z]", password):
+        return False
+    if not re.search(r"[0-9]", password):
+        return False
+    if not re.search(r"[@$!%*#?&]", password):
+        return False
+    return True
 
 # ========== openpyxl ==========
 def initialize_database():
@@ -20,6 +38,7 @@ def initialize_database():
         workbook.save("users.xlsx")
 
 def save_account(username, password):
+    hashed_password = hash_password(password)
     workbook = openpyxl.load_workbook("users.xlsx")
     sheet = workbook.active
 
@@ -27,16 +46,17 @@ def save_account(username, password):
         if row[0] == username:
             return False
 
-    sheet.append([username, password])
+    sheet.append([username, hashed_password])
     workbook.save("users.xlsx")
     return True
 
 def check_login(username, password):
+    hashed_password = hash_password(password)
     workbook = openpyxl.load_workbook("users.xlsx")
     sheet = workbook.active
 
     for row in sheet.iter_rows(min_row=2, values_only=True):
-        if row[0] == username and row[1] == password:
+        if row[0] == username and row[1] == hashed_password:
             return True
     return False
 
@@ -121,15 +141,23 @@ def signUp_page():
         username = username_entry.get()
         password = password_entry.get()
         confirm_password = confirm_password_entry.get()
-    
+
         if not username or not password or not confirm_password:
             error_label.configure(text="Please fill in all fields!", text_color="red")
             return
-    
+
+        if not valid_username(username):
+            error_label.configure(text="Invalid username. Use 4+ letters/numbers/underscores.", text_color="red")
+            return
+
+        if not strong_password(password):
+            error_label.configure(text="Weak password. Must be 6+ chars with upper, lower, number, symbol.", text_color="red")
+            return
+
         if password != confirm_password:
             error_label.configure(text="Passwords don't match!", text_color="red")
             return
-    
+
         if save_account(username, password):
             error_label.configure(text="Account created!", text_color="green")
             username_entry.delete(0, 'end')
@@ -221,7 +249,6 @@ def quizMe():
     for quiz in ["Python", "Terminal", "git"]:
         button = customtkinter.CTkButton(Quiz, text=quiz, anchor='n', height=150, width=150,corner_radius=20, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.grid(padx=10, pady=10)
-
 
 # ========== Start ==========
 initialize_database()
