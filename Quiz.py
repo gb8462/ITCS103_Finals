@@ -1,6 +1,6 @@
 import customtkinter
 import openpyxl
-import hashlib, os, re
+import hashlib, os, re 
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -9,6 +9,7 @@ customtkinter.set_appearance_mode("dark")
 
 main.configure(fg_color="#1f2024")
 
+# Added Encryption for password and requirements for it
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -249,6 +250,7 @@ def quizMe():
     for quiz in ["Python", "Terminal", "git"]:
         button = customtkinter.CTkButton(Quiz, text=quiz, anchor='n', height=150, width=150,corner_radius=20, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.grid(padx=10, pady=10)
+
 
 # ========== Start ==========
 initialize_database()
