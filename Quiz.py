@@ -121,25 +121,22 @@ def signUp_page():
         username = username_entry.get()
         password = password_entry.get()
         confirm_password = confirm_password_entry.get()
-
+    
         if not username or not password or not confirm_password:
-            error_label.configure(text="Please fill in all fields!")
+            error_label.configure(text="Please fill in all fields!", text_color="red")
             return
-
+    
         if password != confirm_password:
-            error_label.configure(text="Passwords don't match!")
+            error_label.configure(text="Passwords don't match!", text_color="red")
             return
-
-        if save_account(username, password):
-            error_label.configure(text="Account created!", text_color="green")
-        else:
-            error_label.configure(text="Username already exists!")
-        
+    
         if save_account(username, password):
             error_label.configure(text="Account created!", text_color="green")
             username_entry.delete(0, 'end')
             password_entry.delete(0, 'end')
             confirm_password_entry.delete(0, 'end')
+        else:
+            error_label.configure(text="Username already exists!", text_color="red")
 
     main.bind('<Return>', lambda event: create_account()) # Bind Enter key to create account
 
