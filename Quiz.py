@@ -7,7 +7,7 @@ from openpyxl import Workbook, load_workbook
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
 main.geometry("1100x680")
-customtkinter.set_appearance_mode("dark")
+customtkinter.set_appearance_mode('dark')
 
 main.configure(fg_color="#1f2024")
 
@@ -206,13 +206,19 @@ def Dashboard():
     button = customtkinter.CTkButton(background, text="Quit", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=close_window)
     button.pack(pady=(10,5))
 
+# Global lists for Create Quiz
+isho_quiz_name_entry = None
+isho_question_entries = []
+isho_choice_entries = []
+isho_correct_answers = []
+
 # ========== QuizMe ==========
 def quizMe():
     clear_frame()
     main.title("QuizMe")
     main.configure(fg_color="#010101")
 
-# ========== Difficulty ==========
+    # ========== Difficulty ==========
     dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0', width=300)
     dashboard.pack(pady=(5,20), padx=10, fill="both",side='left')
 
@@ -232,7 +238,7 @@ def quizMe():
     label = customtkinter.CTkLabel(dashboard,text="Category",font=('Arial',17), text_color='#101010')
     label.pack(pady=(25,0), padx=(0,135))
 
-# ========== Category ========== 
+    # ========== Category ========== 
     category = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
     category.pack(pady=0, padx=1)
 
@@ -240,11 +246,11 @@ def quizMe():
         button = customtkinter.CTkButton(category, text=cat, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.pack(pady=1, padx=1)
     
-# ========== Create Quiz Function ========== 
+    # ========== Create Quiz Function ========== 
     def isho_create_quiz_page():
-        for widget in main.winfo_children():
-            widget.destroy()
-
+        clear_frame()
+        main.configure(fg_color="#1f2024")
+        
         question_entries = []
         choice_entries = []
         correct_answers = []
@@ -256,7 +262,8 @@ def quizMe():
 
         questions_container = customtkinter.CTkScrollableFrame(main, width=1000, height=400)
         questions_container.pack(pady=10, fill="both", expand=True)
-
+    
+        # ========== Adding Questions ==========
         def add_question():
             frame = customtkinter.CTkFrame(questions_container)
             frame.pack(pady=15, fill="x", padx=20)
@@ -267,17 +274,18 @@ def quizMe():
             choices = []
             for i in range(4):
                 entry = customtkinter.CTkEntry(frame, width=500, placeholder_text=f"Choice {chr(65 + i)}")
-                entry.pack(pady=2)
+                entry.pack(pady=5)
                 choices.append(entry)
 
             correct_var = customtkinter.IntVar(value=0)
             for i in range(4):
-                customtkinter.CTkRadioButton(frame, text=f"Correct: Choice {chr(65+i)}", variable=correct_var, value=i).pack(anchor="w")
+                radiobuttn = customtkinter.CTkRadioButton(frame, text=f"Correct: Choice {chr(65+i)}", variable=correct_var, value=i)
+                radiobuttn.pack(anchor="w", pady=5)
 
             question_entries.append(q_entry)
             choice_entries.append(choices)
             correct_answers.append(correct_var)
-
+        # ========== Remove Last Questions ==========
         def remove_last_question():
             if question_entries:
                 question_entries.pop().master.destroy()
@@ -290,21 +298,20 @@ def quizMe():
         customtkinter.CTkButton(btn_row, text="Add Question", command=add_question).pack(side="left", padx=5)
         customtkinter.CTkButton(btn_row, text="Remove Last Question", command=remove_last_question).pack(side="left", padx=5)
         customtkinter.CTkButton(btn_row, text="Save Quiz").pack(side="left", padx=5)
-
+        
         add_question()
-
     
-        back_button = customtkinter.CTkButton(main, text="Back to QuizMe", command=quizMe)
+        back_button = customtkinter.CTkButton(main, text="Go Back", command=quizMe)
         back_button.pack(pady=5)
     
-# ========== Buttons ==========
+    # ========== Buttons ==========
     CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=isho_create_quiz_page)
     CreateQ.pack(pady=(25,0))
 
     back = customtkinter.CTkButton(dashboard, text='Go Back', command=Dashboard)
     back.pack(pady=(25,0))
 
-# ========== Take Quiz Available ==========
+    # ========== Take Quiz Available ==========
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
 
