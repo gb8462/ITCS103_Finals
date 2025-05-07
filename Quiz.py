@@ -192,7 +192,7 @@ def signUp_page():
 def leaderBoard():
     new_window = customtkinter.CTkToplevel()
     new_window.title("New Window")
-    label = customtkinter.CTkLabel(new_window, text="This is a new window")
+    label = customtkinter.CTkLabel(new_window, text="Leaderboard")
     label.pack(padx=20, pady=20)
 
 # ========== Dashboard ==========
