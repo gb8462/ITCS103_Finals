@@ -194,6 +194,20 @@ def leaderBoard():
     new_window.title("New Window")
     label = customtkinter.CTkLabel(new_window, text="Leaderboard")
     label.pack(padx=20, pady=20)
+    treeFrame = customtkinter.CTkFrame(frame)
+    treeFrame.grid(row=0, column=0)
+
+    treeScroll = customtkinter.Scrollbar(treeFrame)
+    treeScroll.pack(side="right", fill='y')
+
+    cols = ("Name", "Score", "Title")
+    treeview = customtkinter.TreeV(treeFrame, show="headings",
+                        yscrollcommand=treeScroll.set, columns=cols, height=14)
+    treeview.column("Name", width="100")
+    treeview.column("Score", width="100")
+    treeview.column("Title", width="100")
+    treeview.pack()
+    treeScroll.config(command=treeview.yview)
 
 # ========== Dashboard ==========
 def Dashboard():
