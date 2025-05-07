@@ -2,6 +2,7 @@ import customtkinter
 import openpyxl
 import hashlib, os, re 
 from tkinter import messagebox
+from tkinter import ttk
 from openpyxl import Workbook, load_workbook
 
 main = customtkinter.CTk()
@@ -187,6 +188,13 @@ def signUp_page():
     go_back_button = customtkinter.CTkButton(signup_frame, text="Go back", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
     go_back_button.pack()
 
+# ========== Leaderboard ==========
+def leaderBoard():
+    new_window = customtkinter.CTkToplevel()
+    new_window.title("New Window")
+    label = customtkinter.CTkLabel(new_window, text="This is a new window")
+    label.pack(padx=20, pady=20)
+
 # ========== Dashboard ==========
 def Dashboard():
     clear_frame()
@@ -211,7 +219,7 @@ def Dashboard():
     button = customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
     button.pack(pady=(10,5))
 
-    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
+    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=leaderBoard)
     button.pack(pady=(10,5))
 
     button = customtkinter.CTkButton(background, text="Quit", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=close_window)
