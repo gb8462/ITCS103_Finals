@@ -1,7 +1,9 @@
+import tkinter as tk
 import customtkinter
 import openpyxl
 import hashlib, os, re 
 from tkinter import messagebox
+from tkinter import ttk
 from openpyxl import Workbook, load_workbook
 from datetime import datetime
 import tkinter.ttk as ttk
@@ -189,6 +191,35 @@ def signUp_page():
     go_back_button = customtkinter.CTkButton(signup_frame, text="Go back", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
     go_back_button.pack()
 
+# ========== Leaderboard ==========
+
+def leaderBoard():
+    extra_window = tk.Toplevel()
+    extra_window.title = ('Leaderboards')
+    extra_window.geometry('300x200')
+    ttk.Label(extra_window, text='Leaderboards').pack()
+    frame = ttk.Frame(extra_window)
+    frame.pack()
+
+    widgets_frame = ttk.LabelFrame(extra_window, text="ok")
+    widgets_frame.grid(row=0, column=0)
+
+    treeFrame = ttk.Frame(frame)
+    treeFrame.grid(row=2, column=1, pady=10)
+    treeScroll = ttk.Scrollbar(treeFrame)
+    treeScroll.pack(side="right", fill='y')
+
+    cols = ("Name", "Score", "Title")
+    treeview = ttk.Treeview(treeFrame, show="headings",
+                        yscrollcommand=treeScroll.set, columns=cols, height=14)
+    treeview.column("Name", width="100")
+    treeview.column("Score", width="100")
+    treeview.column("Title", width="100")
+    treeview.pack()
+    treeScroll.config(command=treeview.yview)
+
+    
+
 # ========== Dashboard ==========
 def Dashboard():
     clear_frame()
@@ -213,7 +244,7 @@ def Dashboard():
     button = customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
     button.pack(pady=(10,5))
 
-    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
+    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=leaderBoard)
     button.pack(pady=(10,5))
 
     button = customtkinter.CTkButton(background, text="Quit", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=close_window)
