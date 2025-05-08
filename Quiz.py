@@ -4,6 +4,7 @@ import hashlib, os, re
 from tkinter import messagebox
 from openpyxl import Workbook, load_workbook
 from datetime import datetime
+import tkinter.ttk as ttk
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -367,78 +368,53 @@ def quizMe():
             if sheet_name.lower() in excluded:
                 continue
 
-            quiz_button = customtkinter.CTkButton(
-                Quiz, 
-                text=sheet_name, 
-                command=lambda name=sheet_name: take_quiz(name),
-                fg_color="#ffffff", 
-                text_color="#101010", 
-                hover_color="#4668f2"
-            )
-            quiz_button.pack(pady=5)
+        quiz_button = customtkinter.CTkButton(Quiz, text=sheet_name, command=lambda name=sheet_name: take_quiz(name), fg_color="#4668f2", hover_color="#314ad1", text_color="#fff", font=("Arial", 16), width=200, height=35, corner_radius=12)
+        quiz_button.pack(pady=8)
 
     def take_quiz(quiz_name):
         clear_frame()
-        main.title(f"Taking Quiz: {quiz_name}")
+        main.configure(fg_color="#1f2024")
+
+        customtkinter.CTkLabel(main, text=f"{quiz_name} Quiz", font=("Arial", 28), text_color="#ffffff").pack(pady=20)
+
+        quiz_frame = customtkinter.CTkScrollableFrame(main, width=800, height=500, fg_color="#2a2b2e")
+        quiz_frame.pack(pady=10)
 
         wb = load_workbook(quiz_file)
         sheet = wb[quiz_name]
 
         questions = []
-        for row in sheet.iter_rows(min_row=2, values_only=True):  # skip header
-            question_text = row[0]
-            choices = row[1:5]
-            correct = row[5]
-            questions.append((question_text, choices, correct))
+        selected_answers = []
 
-        user_answers = []
-        index = [0]  # use list to allow mutability inside nested functions
+        for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), 1):
+            q_text, *choices, correct_index = row
 
-        question_frame = customtkinter.CTkFrame(main)
-        question_frame.pack(pady=10, padx=10)
+            q_label = customtkinter.CTkLabel(quiz_frame, text=f"Q{i}: {q_text}", font=("Arial", 18), text_color="#ffffff", wraplength=700, justify="left")
+            q_label.pack(anchor="w", pady=(15, 5), padx=20)
 
-        question_label = customtkinter.CTkLabel(question_frame, text="", font=("Arial", 18))
-        question_label.pack(pady=10)
+            var = customtkinter.IntVar(value=-1)
+            selected_answers.append(var)
 
-        choice_vars = []
-        radio_var = customtkinter.IntVar()
+            for idx, choice in enumerate(choices):
+                rb = customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#1a1b1e", font=("Arial", 14))
+                rb.pack(anchor="w", padx=40, pady=2)
 
-        for i in range(4):
-            btn = customtkinter.CTkRadioButton(question_frame, text="", variable=radio_var, value=i)
-            btn.pack(anchor="w", pady=2)
-            choice_vars.append(btn)
+            ttk.Separator(quiz_frame, orient="horizontal").pack(fill="x", pady=10, padx=20)
 
-        def load_question():
-            q, choices, _ = questions[index[0]]
-            question_label.configure(text=q)
-            for i, choice in enumerate(choices):
-                choice_vars[i].configure(text=choice)
-            radio_var.set(-1)
-
-        def next_question():
-            if radio_var.get() == -1:
-                messagebox.showerror("Error", "Select an answer before continuing!")
-                return
-            user_answers.append(radio_var.get())
-            index[0] += 1
-            if index[0] < len(questions):
-                load_question()
-            else:
-                show_results()
-
-        def show_results():
+        def submit_answers():
             score = 0
-            for (q, _, correct), user_ans in zip(questions, user_answers):
-                if user_ans == correct:
+            total = len(selected_answers)
+
+            for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True)):
+                correct = row[-1]
+                if selected_answers[i].get() == correct:
                     score += 1
 
-            clear_frame()
-            result_text = f"You scored {score} out of {len(questions)}"
-            customtkinter.CTkLabel(main, text=result_text, font=("Arial", 24)).pack(pady=20)
-            customtkinter.CTkButton(main, text="Back to Quizzes", command=quizMe).pack()
+            messagebox.showinfo("Quiz Result", f"You got {score} out of {total} correct!")
 
-        customtkinter.CTkButton(question_frame, text="Next", command=next_question).pack(pady=10)
-        load_question()
+        customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 16), corner_radius=10, width=200).pack(pady=15)
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 14), corner_radius=10, width=150).pack(pady=5)
+
     load_quizzes()
 
 # ========== Start ==========
