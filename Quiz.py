@@ -11,6 +11,17 @@ customtkinter.set_appearance_mode('dark')
 
 main.configure(fg_color="#1f2024")
 
+
+quiz_file = "quizzes.xlsx"
+if not os.path.exists(quiz_file):
+    wb = Workbook()
+    sheet = wb.active
+    sheet.title = "Template"
+    sheet['A1'] = "This is a placeholder sheet."
+    wb.create_sheet("Scores")
+    wb.save(quiz_file)
+
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
@@ -207,6 +218,7 @@ def Dashboard():
     button.pack(pady=(10,5))
 
 # Global lists for Create Quiz
+
 isho_quiz_name_entry = None
 isho_question_entries = []
 isho_choice_entries = []
@@ -255,10 +267,17 @@ def quizMe():
         choice_entries = []
         correct_answers = []
 
+        # links the local ones to global for saving later
+        global isho_quiz_name_entry, isho_question_entries, isho_choice_entries, isho_correct_answers
+        isho_question_entries = question_entries
+        isho_choice_entries = choice_entries
+        isho_correct_answers = correct_answers
+
         customtkinter.CTkLabel(main, text="Create Quiz", font=("Arial", 24)).pack(pady=10)
         customtkinter.CTkLabel(main, text="Enter Quiz Name:").pack()
         quiz_name_entry = customtkinter.CTkEntry(main, width=300)
         quiz_name_entry.pack(pady=5)
+        isho_quiz_name_entry = quiz_name_entry
 
         questions_container = customtkinter.CTkScrollableFrame(main, width=1000, height=400)
         questions_container.pack(pady=10, fill="both", expand=True)
@@ -285,25 +304,48 @@ def quizMe():
             question_entries.append(q_entry)
             choice_entries.append(choices)
             correct_answers.append(correct_var)
+        
         # ========== Remove Last Questions ==========
         def remove_last_question():
             if question_entries:
                 question_entries.pop().master.destroy()
                 choice_entries.pop()
                 correct_answers.pop()
-
-        btn_row = customtkinter.CTkFrame(main)
-        btn_row.pack(pady=10)
-
-        customtkinter.CTkButton(btn_row, text="Add Question", command=add_question).pack(side="left", padx=5)
-        customtkinter.CTkButton(btn_row, text="Remove Last Question", command=remove_last_question).pack(side="left", padx=5)
-        customtkinter.CTkButton(btn_row, text="Save Quiz").pack(side="left", padx=5)
         
+        def save_quiz():
+            name = isho_quiz_name_entry.get().strip()
+            if not name:
+                messagebox.showerror("Error", "Please enter a quiz name.")
+                return
+
+            wb = load_workbook(quiz_file)
+            if name in wb.sheetnames:
+                messagebox.showerror("Error", "Quiz already exists.")
+                return
+
+            sheet = wb.create_sheet(title=name)
+            sheet.append(["Question", "ChoiceA", "ChoiceB", "ChoiceC", "ChoiceD", "CorrectIndex"])
+
+            for q_entry, choices, correct in zip(isho_question_entries, isho_choice_entries, isho_correct_answers):
+                question = q_entry.get().strip()
+                choice_vals = [c.get().strip() for c in choices]
+                sheet.append([question] + choice_vals + [correct.get()])
+
+            wb.save(quiz_file)
+            messagebox.showinfo("Success", "Quiz saved successfully!")
+
+        button_row = customtkinter.CTkFrame(main)
+        button_row.pack(pady=10)
+
+        customtkinter.CTkButton(button_row, text="Add Question", command=add_question).pack(side="left", padx=5)
+        customtkinter.CTkButton(button_row, text="Remove Last Question", command=remove_last_question).pack(side="left", padx=5)
+        customtkinter.CTkButton(button_row, text="Save Quiz", command=save_quiz).pack(side="left", padx=5)
+
         add_question()
-    
+        
         back_button = customtkinter.CTkButton(main, text="Go Back", command=quizMe)
         back_button.pack(pady=5)
-    
+
     # ========== Buttons ==========
     CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=isho_create_quiz_page)
     CreateQ.pack(pady=(25,0))
