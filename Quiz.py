@@ -5,6 +5,8 @@ import hashlib, os, re
 from tkinter import messagebox
 from tkinter import ttk
 from openpyxl import Workbook, load_workbook
+from datetime import datetime
+import tkinter.ttk as ttk
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -388,6 +390,63 @@ def quizMe():
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
 
+    label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial",20), text_color="#1f2024").pack()
+    def load_quizzes():
+        wb = load_workbook(quiz_file)
+        excluded = ["template", "scores", "users", "sheet"]  # add any sheet you want to ignore
+
+        for sheet_name in wb.sheetnames:
+            if sheet_name.lower() in excluded:
+                continue
+
+        quiz_button = customtkinter.CTkButton(Quiz, text=sheet_name, command=lambda name=sheet_name: take_quiz(name), fg_color="#4668f2", hover_color="#314ad1", text_color="#fff", font=("Arial", 16), width=200, height=35, corner_radius=12)
+        quiz_button.pack(pady=8)
+
+    def take_quiz(quiz_name):
+        clear_frame()
+        main.configure(fg_color="#1f2024")
+
+        customtkinter.CTkLabel(main, text=f"{quiz_name} Quiz", font=("Arial", 28), text_color="#ffffff").pack(pady=20)
+
+        quiz_frame = customtkinter.CTkScrollableFrame(main, width=800, height=500, fg_color="#2a2b2e")
+        quiz_frame.pack(pady=10)
+
+        wb = load_workbook(quiz_file)
+        sheet = wb[quiz_name]
+
+        questions = []
+        selected_answers = []
+
+        for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), 1):
+            q_text, *choices, correct_index = row
+
+            q_label = customtkinter.CTkLabel(quiz_frame, text=f"Q{i}: {q_text}", font=("Arial", 18), text_color="#ffffff", wraplength=700, justify="left")
+            q_label.pack(anchor="w", pady=(15, 5), padx=20)
+
+            var = customtkinter.IntVar(value=-1)
+            selected_answers.append(var)
+
+            for idx, choice in enumerate(choices):
+                rb = customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#1a1b1e", font=("Arial", 14))
+                rb.pack(anchor="w", padx=40, pady=2)
+
+            ttk.Separator(quiz_frame, orient="horizontal").pack(fill="x", pady=10, padx=20)
+
+        def submit_answers():
+            score = 0
+            total = len(selected_answers)
+
+            for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True)):
+                correct = row[-1]
+                if selected_answers[i].get() == correct:
+                    score += 1
+
+            messagebox.showinfo("Quiz Result", f"You got {score} out of {total} correct!")
+
+        customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 16), corner_radius=10, width=200).pack(pady=15)
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 14), corner_radius=10, width=150).pack(pady=5)
+
+    load_quizzes()
 
 # ========== Start ==========
 initialize_database()
