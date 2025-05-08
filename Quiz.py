@@ -3,6 +3,7 @@ import openpyxl
 import hashlib, os, re 
 from tkinter import messagebox
 from openpyxl import Workbook, load_workbook
+from datetime import datetime
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -357,6 +358,88 @@ def quizMe():
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
 
+    label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial",20), text_color="#1f2024").pack()
+    def load_quizzes():
+        wb = load_workbook(quiz_file)
+        excluded = ["template", "scores", "users", "sheet"]  # add any sheet you want to ignore
+
+        for sheet_name in wb.sheetnames:
+            if sheet_name.lower() in excluded:
+                continue
+
+            quiz_button = customtkinter.CTkButton(
+                Quiz, 
+                text=sheet_name, 
+                command=lambda name=sheet_name: take_quiz(name),
+                fg_color="#ffffff", 
+                text_color="#101010", 
+                hover_color="#4668f2"
+            )
+            quiz_button.pack(pady=5)
+
+    def take_quiz(quiz_name):
+        clear_frame()
+        main.title(f"Taking Quiz: {quiz_name}")
+
+        wb = load_workbook(quiz_file)
+        sheet = wb[quiz_name]
+
+        questions = []
+        for row in sheet.iter_rows(min_row=2, values_only=True):  # skip header
+            question_text = row[0]
+            choices = row[1:5]
+            correct = row[5]
+            questions.append((question_text, choices, correct))
+
+        user_answers = []
+        index = [0]  # use list to allow mutability inside nested functions
+
+        question_frame = customtkinter.CTkFrame(main)
+        question_frame.pack(pady=10, padx=10)
+
+        question_label = customtkinter.CTkLabel(question_frame, text="", font=("Arial", 18))
+        question_label.pack(pady=10)
+
+        choice_vars = []
+        radio_var = customtkinter.IntVar()
+
+        for i in range(4):
+            btn = customtkinter.CTkRadioButton(question_frame, text="", variable=radio_var, value=i)
+            btn.pack(anchor="w", pady=2)
+            choice_vars.append(btn)
+
+        def load_question():
+            q, choices, _ = questions[index[0]]
+            question_label.configure(text=q)
+            for i, choice in enumerate(choices):
+                choice_vars[i].configure(text=choice)
+            radio_var.set(-1)
+
+        def next_question():
+            if radio_var.get() == -1:
+                messagebox.showerror("Error", "Select an answer before continuing!")
+                return
+            user_answers.append(radio_var.get())
+            index[0] += 1
+            if index[0] < len(questions):
+                load_question()
+            else:
+                show_results()
+
+        def show_results():
+            score = 0
+            for (q, _, correct), user_ans in zip(questions, user_answers):
+                if user_ans == correct:
+                    score += 1
+
+            clear_frame()
+            result_text = f"You scored {score} out of {len(questions)}"
+            customtkinter.CTkLabel(main, text=result_text, font=("Arial", 24)).pack(pady=20)
+            customtkinter.CTkButton(main, text="Back to Quizzes", command=quizMe).pack()
+
+        customtkinter.CTkButton(question_frame, text="Next", command=next_question).pack(pady=10)
+        load_question()
+    load_quizzes()
 
 # ========== Start ==========
 initialize_database()
