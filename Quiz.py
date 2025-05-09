@@ -475,12 +475,13 @@ def quizMe():
                         break
 
                 user_wb.save("users.xlsx")
-
+                quizMe()
+                
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save score: {e}")
 
-        customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 16), corner_radius=10, width=200).pack(pady=15)
-        customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 14), corner_radius=10, width=150).pack(pady=5)
+        customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 12), corner_radius=10, width=200).pack(pady=5)
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 12), corner_radius=10, width=150).pack(pady=5)
 
     load_quizzes()
 
