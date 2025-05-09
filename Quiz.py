@@ -5,8 +5,6 @@ import hashlib, os, re
 from tkinter import messagebox
 from tkinter import ttk
 from openpyxl import Workbook, load_workbook
-from datetime import datetime
-import tkinter.ttk as ttk
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -20,9 +18,6 @@ quiz_file = "quizzes.xlsx"
 if not os.path.exists(quiz_file):
     wb = Workbook()
     sheet = wb.active
-    sheet.title = "Template"
-    sheet['A1'] = "This is a placeholder sheet."
-    wb.create_sheet("Scores")
     wb.save(quiz_file)
 
 
@@ -153,73 +148,80 @@ def signUp_page():
     error_label = customtkinter.CTkLabel(signup_frame, text="", text_color="red")
     error_label.pack()
 
-# ========== Creating Account ==========
-    def create_account():
+    def on_create_account():
         username = username_entry.get()
         password = password_entry.get()
         confirm_password = confirm_password_entry.get()
 
-        if not username or not password or not confirm_password:
-            error_label.configure(text="Please fill in all fields!", text_color="red")
-            return
-
-        if not valid_username(username):
-            error_label.configure(text="Invalid username. Use 4+ letters/numbers/underscores.", text_color="red")
-            return
-
-        if not strong_password(password):
-            error_label.configure(text="Weak password. Must be 6+ chars with upper, lower, number, symbol.", text_color="red")
-            return
-
         if password != confirm_password:
-            error_label.configure(text="Passwords don't match!", text_color="red")
+            error_label.configure(text="Passwords do not match!")
             return
 
         if save_account(username, password):
-            error_label.configure(text="Account created!", text_color="green")
-            username_entry.delete(0, 'end')
-            password_entry.delete(0, 'end')
-            confirm_password_entry.delete(0, 'end')
+            messagebox.showinfo("Success", "Account created successfully!")
+            login_page()  # Navigate back to the login page after successful sign-up
         else:
-            error_label.configure(text="Username already exists!", text_color="red")
+            error_label.configure(text="Username already exists!")
 
-    main.bind('<Return>', lambda event: create_account()) # Bind Enter key to create account
+    # Create Account button
+    create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_create_account)
+    create_account_button.pack(pady=(0, 5))
 
-    create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=create_account)
-    create_account_button.pack(pady=(5, 10))
+    # Back to Login button
+    back_button = customtkinter.CTkButton(signup_frame, text="Back to Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
+    back_button.pack(pady=(5, 20))
 
-    go_back_button = customtkinter.CTkButton(signup_frame, text="Go back", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
-    go_back_button.pack()
+# ========== Creating Account ==========
+def Leaderboard():
+    clear_frame()
+    main.title("TryQuizMe")
+    main.configure(fg_color="#010101")
 
-# ========== Leaderboard ==========
+    frame = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0)
+    frame.pack(fill='both', expand=True)
 
-def leaderBoard():
-    extra_window = tk.Toplevel()
-    extra_window.title = ('Leaderboards')
-    extra_window.geometry('300x200')
-    ttk.Label(extra_window, text='Leaderboards').pack()
-    frame = ttk.Frame(extra_window)
-    frame.pack()
+    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboard", font=("Arial", 32), text_color="#ffffff")
+    title.pack(pady=(30, 10))
 
-    widgets_frame = ttk.LabelFrame(extra_window, text="ok")
-    widgets_frame.grid(row=0, column=0)
+    tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
+    tree_frame.pack(padx=60, pady=20, fill="both", expand=True)
 
-    treeFrame = ttk.Frame(frame)
-    treeFrame.grid(row=2, column=1, pady=10)
-    treeScroll = ttk.Scrollbar(treeFrame)
-    treeScroll.pack(side="right", fill='y')
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview", background="#2e2f33", foreground="#f2f2f2", rowheight=30, fieldbackground="#2e2f33", font=("Arial", 12))
+    style.configure("Treeview.Heading", font=("Arial", 16, "bold"), background="#353A3E", foreground="#ffffff")
+    style.map("Treeview", background=[('selected', '#353A3E')], foreground=[('selected', '#ffffff')])
 
-    cols = ("Name", "Score", "Title")
-    treeview = ttk.Treeview(treeFrame, show="headings",
-                        yscrollcommand=treeScroll.set, columns=cols, height=14)
-    treeview.column("Name", width="100")
-    treeview.column("Score", width="100")
-    treeview.column("Title", width="100")
-    treeview.pack()
-    treeScroll.config(command=treeview.yview)
+    tree = ttk.Treeview(tree_frame, columns=("Rank", "Username", "Score"), show="headings", selectmode="none")
+    tree.heading("Rank", text="Rank")
+    tree.heading("Username", text="Username")
+    tree.heading("Score", text="Score")
+    tree.column("Rank", anchor="center", width=80)
+    tree.column("Username", anchor="w", width=200)
+    tree.column("Score", anchor="center", width=100)
 
-    
+    tree.pack(fill="both", expand=True, padx=20, pady=20)
 
+    # Insert data
+    try:
+        wb = openpyxl.load_workbook("users.xlsx")
+        sheet = wb.active
+
+        users_data = []
+        for row in sheet.iter_rows(min_row=2, values_only=True):
+            username = row[0]
+            score = row[2] if len(row) > 2 and isinstance(row[2], int) else 0
+            users_data.append((username, score))
+
+        users_data.sort(key=lambda x: x[1], reverse=True)
+
+        for index, (username, score) in enumerate(users_data, start=1):
+            tree.insert("", "end", values=(index, username, score))
+
+    except Exception as e:
+        messagebox.showerror("Error", f"Failed to load leaderboard: {e}")
+
+    customtkinter.CTkButton(frame, text="Back to Dashboard", command=Dashboard, fg_color="#4668f2", hover_color="#314ad1", text_color="#fff",font=("Arial", 14), corner_radius=8, width=180).pack(pady=(0, 20))
 # ========== Dashboard ==========
 def Dashboard():
     clear_frame()
@@ -227,7 +229,7 @@ def Dashboard():
     main.configure(fg_color="#010101")
     
     topbar = customtkinter.CTkFrame(main, fg_color="#353A3E",corner_radius=0,height=60)
-    topbar.pack(pady=0, padx=10, fill="both")
+    topbar.pack(pady=0, padx=0, fill="both")
 
     label = customtkinter.CTkLabel(topbar, text="TryQuizMe",font=('Arial',25))
     label.pack(pady=10,padx=(50,0), side='left')
@@ -236,7 +238,7 @@ def Dashboard():
     label.pack(pady=10,padx=(0,30), side='right')
 
     background = customtkinter.CTkFrame(main, fg_color="#f0f0f0",corner_radius=0,height=400)
-    background.pack(pady=(0,10), padx=10, fill="both", expand=True)
+    background.pack(pady=(0,10), padx=0, fill="both", expand=True)
 
     button = customtkinter.CTkButton(background, text="QuizMe", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=quizMe)
     button.pack(pady=(170,5))
@@ -244,7 +246,7 @@ def Dashboard():
     button = customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
     button.pack(pady=(10,5))
 
-    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=leaderBoard)
+    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=Leaderboard)
     button.pack(pady=(10,5))
 
     button = customtkinter.CTkButton(background, text="Quit", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=close_window)
@@ -388,24 +390,31 @@ def quizMe():
 
     # ========== Take Quiz Available ==========
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
-    Quiz.pack(pady=(5,20), padx=(0,10), side='right', fill="both", expand=True)
+    Quiz.pack(pady=(5, 20), padx=(0, 10), side='right', fill="both", expand=True)
 
-    label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial",20), text_color="#1f2024").pack()
+    label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial", 20), text_color="#1f2024")
+    label.pack()
+
     def load_quizzes():
-        wb = load_workbook(quiz_file)
-        excluded = ["template", "scores", "users", "sheet"]  # add any sheet you want to ignore
+        try:
+            wb = load_workbook(quiz_file)
+            excluded = ["template", "scores", "users", "sheet"]  # Make sure "Sheet" is in lowercase to avoid case issues
 
-        for sheet_name in wb.sheetnames:
-            if sheet_name.lower() in excluded:
-                continue
+            for sheet_name in wb.sheetnames:
+                normalized_sheet_name = sheet_name.strip().lower()  # Normalize to lowercase and remove leading/trailing spaces
+                
+                if normalized_sheet_name in excluded:
+                    continue
 
-        quiz_button = customtkinter.CTkButton(Quiz, text=sheet_name, command=lambda name=sheet_name: take_quiz(name), fg_color="#4668f2", hover_color="#314ad1", text_color="#fff", font=("Arial", 16), width=200, height=35, corner_radius=12)
-        quiz_button.pack(pady=8)
+                quiz_button = customtkinter.CTkButton(Quiz, text=sheet_name, command=lambda name=sheet_name: take_quiz(name), fg_color="#4668f2", hover_color="#314ad1", text_color="#fff", font=("Arial", 16), width=200, height=35, corner_radius=12)
+                quiz_button.pack(pady=8)
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to load quizzes: {e}")
 
     def take_quiz(quiz_name):
         clear_frame()
         main.configure(fg_color="#1f2024")
-
         customtkinter.CTkLabel(main, text=f"{quiz_name} Quiz", font=("Arial", 28), text_color="#ffffff").pack(pady=20)
 
         quiz_frame = customtkinter.CTkScrollableFrame(main, width=800, height=500, fg_color="#2a2b2e")
@@ -414,34 +423,61 @@ def quizMe():
         wb = load_workbook(quiz_file)
         sheet = wb[quiz_name]
 
-        questions = []
-        selected_answers = []
+        selected_answers, valid_rows = [], []
 
         for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), 1):
-            q_text, *choices, correct_index = row
+            if not row or len(row) < 6:
+                print(f"⚠️ Skipping row {i} due to wrong length: {row}")
+                continue
 
-            q_label = customtkinter.CTkLabel(quiz_frame, text=f"Q{i}: {q_text}", font=("Arial", 18), text_color="#ffffff", wraplength=700, justify="left")
-            q_label.pack(anchor="w", pady=(15, 5), padx=20)
+            q_text, choice_a, choice_b, choice_c, choice_d, correct_index = row[:6]
+            choices = [choice_a, choice_b, choice_c, choice_d]
+            valid_rows.append((i, correct_index))
+
+            customtkinter.CTkLabel(quiz_frame, text=f"Q{i}: {q_text}", font=("Arial", 18), text_color="#ffffff", wraplength=700, justify="left").pack(anchor="w", pady=(15, 5), padx=20)
 
             var = customtkinter.IntVar(value=-1)
             selected_answers.append(var)
 
             for idx, choice in enumerate(choices):
-                rb = customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#1a1b1e", font=("Arial", 14))
-                rb.pack(anchor="w", padx=40, pady=2)
+                if choice is None:
+                    continue
+                customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#1a1b1e", font=("Arial", 14)).pack(anchor="w", padx=40, pady=2)
 
             ttk.Separator(quiz_frame, orient="horizontal").pack(fill="x", pady=10, padx=20)
 
         def submit_answers():
-            score = 0
-            total = len(selected_answers)
+            score, total = 0, len(selected_answers)
 
-            for i, row in enumerate(sheet.iter_rows(min_row=2, values_only=True)):
-                correct = row[-1]
+            for i, (row_idx, correct) in enumerate(valid_rows):
                 if selected_answers[i].get() == correct:
                     score += 1
 
             messagebox.showinfo("Quiz Result", f"You got {score} out of {total} correct!")
+
+            try:
+                user_wb = openpyxl.load_workbook("users.xlsx")
+                user_sheet = user_wb.active
+
+                headers = [cell.value for cell in user_sheet[1]]
+                
+                # If "Score" column doesn't exist, add it
+                if "Score" not in headers:
+                    user_sheet.cell(row=1, column=len(headers) + 1, value="Score")
+                    score_col_index = len(headers) + 1
+                else:
+                    score_col_index = headers.index("Score") + 1
+
+                # Find the row for the current user and update the score
+                for row in user_sheet.iter_rows(min_row=2):
+                    if row[0].value == current_user:
+                        user_sheet.cell(row=row[0].row, column=score_col_index, value=score)
+                        break
+
+                user_wb.save("users.xlsx")
+
+            except Exception as e:
+                messagebox.showerror("Error", f"Failed to save score: {e}")
 
         customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 16), corner_radius=10, width=200).pack(pady=15)
         customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 14), corner_radius=10, width=150).pack(pady=5)
