@@ -4,7 +4,7 @@ import hashlib, os, re
 from tkinter import messagebox
 from tkinter import ttk
 from openpyxl import Workbook, load_workbook
-from PIL import Image
+from PIL import Image, ImageTk, ImageEnhance
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -171,6 +171,71 @@ def signUp_page():
     back_button = customtkinter.CTkButton(signup_frame, text="Back to Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
     back_button.pack(pady=(5, 20))
 
+# ========== User's Achievement =====
+achievements = [
+    {"name": "First Steps", "desc": "Complete your first task", "unlocked": True},
+    {"name": "Explorer", "desc": "Visit all sections", "unlocked": False},
+    {"name": "Master", "desc": "Reach level 10", "unlocked": True},
+]
+# ========== Achievements ===========
+
+# Create placeholder images
+def create_placeholder_image(color):
+    img = Image.new("RGB", (64, 64), color=color)
+    return img
+
+# Apply dimming to locked achievements
+def process_image(img, unlocked):
+    if not unlocked:
+        enhancer = ImageEnhance.Brightness(img)
+        img = enhancer.enhance(0.3)  # Dim the image
+    return ImageTk.PhotoImage(img)
+
+def Achievements():
+    clear_frame()
+    main.title("TryQuizMe")
+    main.configure(fg_color="#010101")
+
+    frame = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0)
+    frame.pack(fill='both', expand=True)
+
+    title = customtkinter.CTkLabel(frame, text="🌟 Achievements 🌟", font=("Arial", 30), text_color="#ffffff")
+    title.pack(pady=(30, 10))
+
+    tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
+    tree_frame.pack(padx=60, pady=20, fill="both", expand=True)
+
+    last_frame = customtkinter.CTkFrame(frame)
+    last_frame.pack(padx=100,pady=20)
+
+    for ach in achievements:
+        frame = ttk.Frame(tree_frame, padding=5)
+        frame.pack(fill="x", pady=5)
+
+        # Create and process the image
+        base_img = create_placeholder_image("green" if ach["unlocked"] else "gray")
+        photo = process_image(base_img, ach["unlocked"])
+
+        # Image on left
+        img_label = ttk.Label(frame, image=photo)
+        img_label.image = photo  # Keep a reference
+        img_label.pack(side="left")
+
+        # Text on right
+        text_frame = ttk.Frame(frame)
+        text_frame.pack(side="left", padx=10)
+
+        name_style = {'foreground': 'black' if ach['unlocked'] else 'gray'}
+        desc_style = {'foreground': 'black' if ach['unlocked'] else 'gray'}
+
+        name_label = ttk.Label(text_frame, text=ach["name"], font=("Arial", 12, "bold"), **name_style)
+        desc_label = ttk.Label(text_frame, text=ach["desc"], font=("Arial", 10), **desc_style)
+
+        name_label.pack(anchor="w")
+        desc_label.pack(anchor="w")
+
+    customtkinter.CTkButton(last_frame,text="Back to Dashboard", command=Dashboard, fg_color="#4668f2", hover_color="#314ad1", text_color="#fff",font=("Arial", 14), corner_radius=8, width=180).pack(pady=(0, 20))
+
 # ========== Leaderboard ==========
 def Leaderboard():
     clear_frame()
@@ -180,7 +245,7 @@ def Leaderboard():
     frame = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0)
     frame.pack(fill='both', expand=True)
 
-    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboard", font=("Arial", 30), text_color="#ffffff")
+    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboard 🏆", font=("Arial", 30), text_color="#ffffff")
     title.pack(pady=(30, 10))
 
     tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
@@ -258,7 +323,7 @@ def Dashboard():
 
     # Buttons
     customtkinter.CTkButton(background, text="QuizMe", command=quizMe, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(170, 5))
-    customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
+    customtkinter.CTkButton(background, text="Achievements", command=Achievements, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
     customtkinter.CTkButton(background, text="Leaderboards", command=Leaderboard, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
     customtkinter.CTkButton(background, text="Quit", command=close_window, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
 
