@@ -471,7 +471,7 @@ def quizMe():
                 user_sheet = user_wb.active
 
                 headers = [cell.value for cell in user_sheet[1]]
-                
+
                 # If "Score" column doesn't exist, add it
                 if "Score" not in headers:
                     user_sheet.cell(row=1, column=len(headers) + 1, value="Score")
@@ -482,12 +482,16 @@ def quizMe():
                 # Find the row for the current user and update the score
                 for row in user_sheet.iter_rows(min_row=2):
                     if row[0].value == current_user:
-                        user_sheet.cell(row=row[0].row, column=score_col_index, value=score)
+                        current_score = row[score_col_index - 1].value
+                        if current_score is None:
+                            current_score = 0
+                        new_score = current_score + score
+                        user_sheet.cell(row=row[0].row, column=score_col_index, value=new_score)
                         break
 
                 user_wb.save("users.xlsx")
                 quizMe()
-                
+
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save score: {e}")
 
