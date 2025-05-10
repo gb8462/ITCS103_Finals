@@ -5,6 +5,7 @@ import hashlib, os, re
 from tkinter import messagebox
 from tkinter import ttk
 from openpyxl import Workbook, load_workbook
+from PIL import Image
 
 main = customtkinter.CTk()
 main.title("TryQuizMe login")
@@ -171,7 +172,7 @@ def signUp_page():
     back_button = customtkinter.CTkButton(signup_frame, text="Back to Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
     back_button.pack(pady=(5, 20))
 
-# ========== Creating Account ==========
+# ========== Leaderboard ==========
 def Leaderboard():
     clear_frame()
     main.title("TryQuizMe")
@@ -228,30 +229,39 @@ def Dashboard():
     clear_frame()
     main.title("TryQuizMe")
     main.configure(fg_color="#010101")
-    
-    topbar = customtkinter.CTkFrame(main, fg_color="#353A3E",corner_radius=0,height=60)
+
+    topbar = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0, height=60)
     topbar.pack(pady=0, padx=0, fill="both")
 
-    label = customtkinter.CTkLabel(topbar, text="TryQuizMe",font=('Arial',25))
-    label.pack(pady=10,padx=(50,0), side='left')
+    # Load the logo image
+    logo_path = os.path.join("assets", "logo.png")
+    logo_img = customtkinter.CTkImage(light_image=Image.open(logo_path), size=(40, 40))
+    logo_label = customtkinter.CTkLabel(topbar, image=logo_img, text="")  # no text
+    logo_label.pack(pady=10, padx=(20, 0), side="left")
 
-    label = customtkinter.CTkLabel(topbar, text=current_user, font=('Arial',18))
-    label.pack(pady=10,padx=(0,30), side='right')
+    # App title
+    title_label = customtkinter.CTkLabel(topbar, text="TryQuizMe", font=('Arial', 25))
+    title_label.pack(pady=10, padx=(5, 0), side='left')
 
-    background = customtkinter.CTkFrame(main, fg_color="#f0f0f0",corner_radius=0,height=400)
-    background.pack(pady=(0,10), padx=0, fill="both", expand=True)
+    # Load the profile pic
+    pfp_path = os.path.join("assets", "pfp.png")
+    pfp_img = customtkinter.CTkImage(light_image=Image.open(pfp_path), size=(40, 40))
+    pfp_label = customtkinter.CTkLabel(topbar, image=pfp_img, text="")
+    pfp_label.pack(pady=10, padx=(0, 10), side="right")
 
-    button = customtkinter.CTkButton(background, text="QuizMe", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=quizMe)
-    button.pack(pady=(170,5))
+    # Username label
+    user_label = customtkinter.CTkLabel(topbar, text=current_user, font=('Arial', 18))
+    user_label.pack(pady=10, padx=(0, 5), side='right')
 
-    button = customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A')
-    button.pack(pady=(10,5))
+    # Background
+    background = customtkinter.CTkFrame(main, fg_color="#f0f0f0", corner_radius=0, height=400)
+    background.pack(fill="both", expand=True)
 
-    button = customtkinter.CTkButton(background, text="Leaderboards", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=Leaderboard)
-    button.pack(pady=(10,5))
-
-    button = customtkinter.CTkButton(background, text="Quit", corner_radius=3, width=350, height=40, font=('Arial',20), fg_color='#353A3E',text_color='#E0E0E0', hover_color='#1A1A1A', command=close_window)
-    button.pack(pady=(10,5))
+    # Buttons
+    customtkinter.CTkButton(background, text="QuizMe", command=quizMe, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(170, 5))
+    customtkinter.CTkButton(background, text="Achievements", corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
+    customtkinter.CTkButton(background, text="Leaderboards", command=Leaderboard, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
+    customtkinter.CTkButton(background, text="Quit", command=close_window, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
 
 # Global lists for Create Quiz
 
@@ -290,7 +300,7 @@ def quizMe():
     category = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
     category.pack(pady=0, padx=1)
 
-    for cat in ["All Category", "General Skills", "Web Development", "Cryptography", "Python"]:
+    for cat in ["All Category", "General", "Web Development", "Cryptography", "Python"]:
         button = customtkinter.CTkButton(category, text=cat, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
         button.pack(pady=1, padx=1)
     
