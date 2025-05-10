@@ -80,75 +80,144 @@ def clear_frame():
     for widget in main.winfo_children():
         widget.destroy()
 
-# ========== Login Page ==========
+# ========== Global Current User ==========
 current_user = ""
 
+# ======== Login Page ========
 def login_page():
     clear_frame()
-    
-    login_frame = customtkinter.CTkFrame(main, corner_radius=20)
+
+    login_frame = customtkinter.CTkFrame(main, corner_radius=20, fg_color="#f7f9fc")
     login_frame.pack(pady=100, padx=300, fill="both", expand=True)
 
-    label = customtkinter.CTkLabel(login_frame, text="Login", fg_color="transparent", font=("Arial", 75))
-    label.pack(pady=(60, 20))
+    customtkinter.CTkLabel(
+        login_frame, text="Login", font=("Arial", 50, "bold"), text_color="#1f2024"
+    ).pack(pady=(40, 20))
 
-    username_entry = customtkinter.CTkEntry(login_frame, placeholder_text="Username", width=230, corner_radius=15)
-    username_entry.pack(pady=(10, 5))
+    # Username Field
+    customtkinter.CTkLabel(login_frame, text="Username", font=("Arial", 13), text_color="#1f2024").pack()
+    username_entry = customtkinter.CTkEntry(
+        login_frame, width=280, corner_radius=12, border_color="#dcdfe3", text_color="#000000",border_width=2, fg_color="#ffffff"
+    )
+    username_entry.pack(pady=(5, 10))
 
-    password_entry = customtkinter.CTkEntry(login_frame, placeholder_text="Password", width=230, corner_radius=15, show="*")
-    password_entry.pack(pady=(10, 20))
+    # Password Field
+    customtkinter.CTkLabel(login_frame, text="Password", font=("Arial", 13), text_color="#1f2024").pack()
+    password_var = customtkinter.StringVar()
+    password_entry = customtkinter.CTkEntry(
+        login_frame, textvariable=password_var, width=280, corner_radius=12,
+        border_color="#dcdfe3", border_width=2, text_color="#000000",fg_color="#ffffff", show="*"
+    )
+    password_entry.pack(pady=(5, 5))
 
-    error_label = customtkinter.CTkLabel(login_frame, text="", text_color="red")
+    # Show/Hide toggle
+    def toggle_password_visibility():
+        if password_entry.cget("show") == "*":
+            password_entry.configure(show="")
+            toggle_button.configure(text="Hide")
+        else:
+            password_entry.configure(show="*")
+            toggle_button.configure(text="Show")
+
+    toggle_button = customtkinter.CTkButton(
+        login_frame, text="Show", width=60, height=20, font=("Arial", 11), corner_radius=10,
+        fg_color="#dcdfe3", text_color="#1f2024", command=toggle_password_visibility
+    )
+    toggle_button.pack(pady=(0, 15))
+
+    error_label = customtkinter.CTkLabel(login_frame, text="", text_color="#e74c3c", font=("Arial", 12))
     error_label.pack()
 
     def on_login():
         global current_user
-
         username = username_entry.get()
-        password = password_entry.get()
+        password = password_var.get()
 
         if check_login(username, password):
-            current_user = username 
+            current_user = username
             Dashboard()
         else:
             error_label.configure(text="Invalid username or password")
-    
-    main.bind('<Return>', lambda event: on_login()) # Bind Enter key to login
-    
-    login_button = customtkinter.CTkButton(login_frame, text="Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_login)
-    login_button.pack()
 
-    label = customtkinter.CTkLabel(login_frame, text='or', fg_color='transparent', font=('Arial',12))
-    label.pack()
+    main.bind('<Return>', lambda event: on_login())
 
-    create_account_button = customtkinter.CTkButton(login_frame, text="Sign up", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=signUp_page)
-    create_account_button.pack()
+    # Login Button
+    customtkinter.CTkButton(
+        login_frame, text="Login", font=("Arial", 16, "bold"), corner_radius=20, text_color="#ffffff",
+        fg_color="#4668f2", hover_color="#314ad1", width=150, command=on_login
+    ).pack(pady=(20, 0))
 
-# ========== Sign Up Page ==========
+    customtkinter.CTkLabel(
+        login_frame, text="or", font=("Arial", 12), text_color="#888888"
+    ).pack(pady=(5, 5))
+
+    # Sign Up Button
+    customtkinter.CTkButton(
+        login_frame, text="Sign up", font=("Arial", 15), corner_radius=20, text_color="#4668f2",
+        fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=150,
+        command=signUp_page
+    ).pack(pady=(0, 20))
+
+
+# ======== Sign Up Page ========
 def signUp_page():
     clear_frame()
 
-    signup_frame = customtkinter.CTkFrame(main, corner_radius=20)
+    signup_frame = customtkinter.CTkFrame(main, corner_radius=20, fg_color="#f7f9fc")
     signup_frame.pack(pady=100, padx=300, fill="both", expand=True)
 
-    label = customtkinter.CTkLabel(signup_frame, text="Sign-Up", fg_color="transparent", font=("Arial", 75))
-    label.pack(pady=(60, 20))
+    customtkinter.CTkLabel(
+        signup_frame, text="Sign Up", font=("Arial", 50, "bold"), text_color="#1f2024"
+    ).pack(pady=(40, 20))
 
-    username_entry = customtkinter.CTkEntry(signup_frame, placeholder_text="Username", width=230, corner_radius=15)
-    username_entry.pack(pady=(10, 5))
+    # Username
+    customtkinter.CTkLabel(signup_frame, text="Username", font=("Arial", 13), text_color="#1f2024").pack()
+    username_entry = customtkinter.CTkEntry(
+        signup_frame, width=280, corner_radius=12, border_color="#dcdfe3",
+        border_width=2, fg_color="#ffffff",text_color="#000000"
+    )
+    username_entry.pack(pady=(5, 10))
 
-    password_entry = customtkinter.CTkEntry(signup_frame, placeholder_text="Password", width=230, corner_radius=15, show="*")
-    password_entry.pack(pady=(10, 5))
+    # Password
+    customtkinter.CTkLabel(signup_frame, text="Password", font=("Arial", 13), text_color="#1f2024").pack()
+    password_var = customtkinter.StringVar()
+    password_entry = customtkinter.CTkEntry(
+        signup_frame, textvariable=password_var, width=280, corner_radius=12,
+        border_color="#dcdfe3", border_width=2, text_color="#000000",fg_color="#ffffff", show="*"
+    )
+    password_entry.pack(pady=(5, 10))
 
-    confirm_password_entry = customtkinter.CTkEntry(signup_frame, placeholder_text="Confirm Password", width=230, corner_radius=15, show="*")
-    confirm_password_entry.pack(pady=(10, 20))
+    # Confirm Password
+    customtkinter.CTkLabel(signup_frame, text="Confirm Password", font=("Arial", 13), text_color="#1f2024").pack()
+    confirm_password_entry = customtkinter.CTkEntry(
+        signup_frame, width=280, corner_radius=12,
+        border_color="#dcdfe3", border_width=2, fg_color="#ffffff", text_color="#dcdfe3",show="*"
+    )
+    confirm_password_entry.pack(pady=(5, 5))
 
-    error_label = customtkinter.CTkLabel(signup_frame, text="", text_color="red")
+    # Toggle Passwords
+    def toggle_signup_password():
+        if password_entry.cget("show") == "*":
+            password_entry.configure(show="")
+            confirm_password_entry.configure(show="")
+            toggle_signup_button.configure(text="Hide")
+        else:
+            password_entry.configure(show="*")
+            confirm_password_entry.configure(show="*")
+            toggle_signup_button.configure(text="Show")
+
+    toggle_signup_button = customtkinter.CTkButton(
+        signup_frame, text="Show", width=60, height=20, font=("Arial", 11),
+        corner_radius=10, fg_color="#dcdfe3", text_color="#1f2024", command=toggle_signup_password
+    )
+    toggle_signup_button.pack(pady=(0, 15))
+
+    error_label = customtkinter.CTkLabel(signup_frame, text="", text_color="#e74c3c", font=("Arial", 12))
     error_label.pack()
 
     def on_create_account():
         username = username_entry.get()
-        password = password_entry.get()
+        password = password_var.get()
         confirm_password = confirm_password_entry.get()
 
         if password != confirm_password:
@@ -157,17 +226,22 @@ def signUp_page():
 
         if save_account(username, password):
             messagebox.showinfo("Success", "Account created successfully!")
-            login_page()  # Navigate back to the login page after successful sign-up
+            login_page()
         else:
             error_label.configure(text="Username already exists!")
 
-    # Create Account button
-    create_account_button = customtkinter.CTkButton(signup_frame, text="Create Account", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=on_create_account)
-    create_account_button.pack(pady=(0, 5))
+    # Create Account Button
+    customtkinter.CTkButton(
+        signup_frame, text="Create Account", font=("Arial", 15, "bold"), corner_radius=20, text_color="#ffffff",
+        fg_color="#4668f2", hover_color="#314ad1", width=170, command=on_create_account
+    ).pack(pady=(10, 5))
 
-    # Back to Login button
-    back_button = customtkinter.CTkButton(signup_frame, text="Back to Login", corner_radius=20, text_color='#e4e6ed', hover_color='#1A1A1A', fg_color='#5f626e', command=login_page)
-    back_button.pack(pady=(5, 20))
+    # Back to Login Button
+    customtkinter.CTkButton(
+        signup_frame, text="Back to Login", font=("Arial", 14), corner_radius=20, text_color="#4668f2",
+        fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=170,
+        command=login_page
+    ).pack(pady=(0, 20))
 
 # ========== User's Achievement ==========
 achievements = [
@@ -650,18 +724,33 @@ def quizMe():
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
     Quiz.pack(pady=(5, 20), padx=(0, 10), side='right', fill="both", expand=True)
 
-    label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial", 20), text_color="#1f2024")
-    label.pack(pady=10)
+    label = customtkinter.CTkLabel(
+        Quiz,
+        text="Available Quizzes",
+        font=("Arial", 24, "bold"),
+        text_color="#1f2024"
+    )
+    label.pack(pady=(20, 10))
+
+    # Create an inner frame for quiz buttons using grid layout
+    quiz_grid_frame = customtkinter.CTkFrame(Quiz, fg_color="transparent")
+    quiz_grid_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+    # Make 3 columns responsive
+    for i in range(3):
+        quiz_grid_frame.grid_columnconfigure(i, weight=1)
 
     def reload_quiz_list():
         # Clear previous quiz buttons
-        for widget in Quiz.winfo_children():
-            if isinstance(widget, customtkinter.CTkButton) and widget.cget("text") != "Available Quizzes":
-                widget.destroy()
+        for widget in quiz_grid_frame.winfo_children():
+            widget.destroy()
 
         try:
             wb = load_workbook(quiz_file)
             excluded_sheets = ["template", "scores", "users", "sheet", "filters"]
+
+            row = 0
+            col = 0
 
             for sheet_name in wb.sheetnames:
                 if sheet_name.lower() in excluded_sheets:
@@ -681,21 +770,27 @@ def quizMe():
                 if selected_category.get() not in ("", "All Category") and quiz_cat != selected_category.get():
                     continue
 
-                customtkinter.CTkButton(
-                    Quiz,
+                quiz_button = customtkinter.CTkButton(
+                    quiz_grid_frame,
                     text=quiz_name,
                     command=lambda name=quiz_name: take_quiz(name),
                     fg_color="#4668f2",
                     hover_color="#314ad1",
                     text_color="#ffffff",
-                    font=("Arial", 16),
+                    font=("Arial", 15),
                     width=200,
-                    height=35,
+                    height=45,
                     corner_radius=12
-                ).pack(pady=8)
+                )
+                quiz_button.grid(row=row, column=col, padx=10, pady=10, sticky="nsew")
+
+                col += 1
+                if col > 2:
+                    col = 0
+                    row += 1
 
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load quizzes: {str(e)}")
+            messagebox.showerror("Error", f"Failed to load quizzes: {str(e)}")  
 
     def take_quiz(quiz_name):
         clear_frame()
