@@ -294,7 +294,7 @@ def Achievements():
     tree_frame.pack(pady=10, fill="both", expand=True)
 
     last_frame = customtkinter.CTkFrame(frame)
-    last_frame.pack(padx=100,pady=20)
+    last_frame.pack(padx=100,pady=10)
 
     for ach in achievements:
         frame = ttk.Frame(tree_frame, padding=5)
@@ -322,7 +322,7 @@ def Achievements():
         name_label.pack(anchor="w")
         desc_label.pack(anchor="w")
 
-    customtkinter.CTkButton(last_frame,text="Back to Dashboard", command=Dashboard, fg_color="#4668f2", hover_color="#314ad1", text_color="#fff",font=("Arial", 14), corner_radius=8, width=180).pack(pady=(0, 20))
+    customtkinter.CTkButton(last_frame,text="Back to Dashboard", command=Dashboard, fg_color="#4668f2", hover_color="#314ad1", text_color="#fff",font=("Arial", 14), corner_radius=8, width=180).pack(pady=(0, 0))
 
 # ========== Leaderboard ==========
 def Leaderboard():
