@@ -181,7 +181,7 @@ def Leaderboard():
     frame = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0)
     frame.pack(fill='both', expand=True)
 
-    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboards", font=("Arial", 30), text_color="#ffffff")
+    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboard", font=("Arial", 30), text_color="#ffffff")
     title.pack(pady=(30, 10))
 
     tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
@@ -305,7 +305,8 @@ def quizMe():
         button.pack(pady=1, padx=1)
     
     # ========== Create Quiz Function ========== 
-    def isho_create_quiz_page():
+    def isho_create_quiz_page(quiz_name=None, existing_data=None):
+
         clear_frame()
         main.configure(fg_color="#1f2024")
         
@@ -322,6 +323,10 @@ def quizMe():
         customtkinter.CTkLabel(main, text="Create Quiz", font=("Arial", 24)).pack(pady=10)
         customtkinter.CTkLabel(main, text="Enter Quiz Name:").pack()
         quiz_name_entry = customtkinter.CTkEntry(main, width=300)
+        if quiz_name:
+            quiz_name_entry.insert(0, quiz_name)
+            quiz_name_entry.configure(state="disabled")  # Prevent renaming
+
         quiz_name_entry.pack(pady=5)
         isho_quiz_name_entry = quiz_name_entry
 
@@ -329,20 +334,28 @@ def quizMe():
         questions_container.pack(pady=10, fill="both", expand=True)
     
         # ========== Adding Questions ==========
-        def add_question():
+        def add_question(prefill=None):
+            
             frame = customtkinter.CTkFrame(questions_container)
             frame.pack(pady=15, fill="x", padx=20)
 
             q_entry = customtkinter.CTkEntry(frame, width=600, placeholder_text="Enter question")
             q_entry.pack(pady=4)
+            if prefill:
+                q_entry.insert(0, prefill[0])
 
             choices = []
             for i in range(4):
                 entry = customtkinter.CTkEntry(frame, width=500, placeholder_text=f"Choice {chr(65 + i)}")
                 entry.pack(pady=5)
+                if prefill:
+                    entry.insert(0, prefill[i + 1])
                 choices.append(entry)
 
             correct_var = customtkinter.IntVar(value=0)
+            if prefill:
+                correct_var.set(prefill[5])
+
             for i in range(4):
                 radiobuttn = customtkinter.CTkRadioButton(frame, text=f"Correct: Choice {chr(65+i)}", variable=correct_var, value=i)
                 radiobuttn.pack(anchor="w", pady=5)
@@ -365,9 +378,12 @@ def quizMe():
                 return
 
             wb = load_workbook(quiz_file)
-            if name in wb.sheetnames:
+            if name in wb.sheetnames and not existing_data:
                 messagebox.showerror("Error", "Quiz already exists.")
                 return
+
+            if name in wb.sheetnames and existing_data:
+                del wb[name]  # delete old sheet before overwriting
 
             sheet = wb.create_sheet(title=name)
             sheet.append(["Question", "ChoiceA", "ChoiceB", "ChoiceC", "ChoiceD", "CorrectIndex"])
@@ -388,17 +404,70 @@ def quizMe():
         customtkinter.CTkButton(button_row, text="Remove Last Question", command=remove_last_question).pack(side="left", padx=5)
         customtkinter.CTkButton(button_row, text="Save Quiz", command=save_quiz).pack(side="left", padx=5)
 
-        add_question()
+        if existing_data:
+            for row in existing_data[1:]:  # skip header row
+                add_question(prefill=row)
+        else:
+            add_question()
         
         back_button = customtkinter.CTkButton(main, text="Go Back", command=quizMe)
         back_button.pack(pady=5)
+    
+    def open_edit_quiz_page():
+        clear_frame()
+        main.configure(fg_color="#1f2024")
+
+        customtkinter.CTkLabel(main, text="Edit Existing Quiz", font=("Arial", 24)).pack(pady=10)
+
+        # Load workbook and get sheet names
+        try:
+            wb = load_workbook(quiz_file)
+            quiz_names = wb.sheetnames
+        except FileNotFoundError:
+            quiz_names = []
+
+        # Display available quiz names
+        if quiz_names:
+            customtkinter.CTkLabel(main, text="Available Quizzes:").pack()
+            quiz_list_frame = customtkinter.CTkScrollableFrame(main, width=400, height=150)
+            quiz_list_frame.pack(pady=5)
+            for q in quiz_names:
+                customtkinter.CTkLabel(quiz_list_frame, text=q).pack(anchor="w", padx=10)
+        else:
+            customtkinter.CTkLabel(main, text="No quizzes found.").pack(pady=5)
+
+        # Input for quiz to edit
+        customtkinter.CTkLabel(main, text="Enter quiz name to edit:").pack(pady=(10, 0))
+        quiz_name_entry = customtkinter.CTkEntry(main, width=300)
+        quiz_name_entry.pack(pady=5)
+
+        def load_selected_quiz():
+            quiz_name = quiz_name_entry.get().strip()
+            if not quiz_name:
+                messagebox.showerror("Error", "Please enter a quiz name.")
+                return
+            
+            if quiz_name not in quiz_names:
+                messagebox.showerror("Error", f"Quiz '{quiz_name}' does not exist.")
+                return
+            
+            # Load data and call create page in edit mode
+            sheet = wb[quiz_name]
+            data = [[cell.value for cell in row] for row in sheet.iter_rows()]
+            isho_create_quiz_page(quiz_name=quiz_name, existing_data=data)
+
+        # Buttons
+        customtkinter.CTkButton(main, text="Load Quiz", command=load_selected_quiz).pack(pady=10)
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe).pack(pady=5)
 
     # ========== Buttons ==========
     CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=isho_create_quiz_page)
     CreateQ.pack(pady=(25,0))
+    
+    customtkinter.CTkButton(dashboard, text="Edit Quiz", command=open_edit_quiz_page).pack(pady=(15,0))
 
     back = customtkinter.CTkButton(dashboard, text='Go Back', command=Dashboard)
-    back.pack(pady=(25,0))
+    back.pack(pady=(15,0))
 
     # ========== Take Quiz Available ==========
     Quiz = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0')
