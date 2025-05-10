@@ -70,7 +70,7 @@ def check_login(username, password):
             return True
     return False
 
-# ========== Window Close ==========
+# ========== Win5w Close ==========
 def close_window():
     main.destroy()
 
