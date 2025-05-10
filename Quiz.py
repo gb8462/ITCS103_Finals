@@ -191,7 +191,7 @@ def signUp_page():
     customtkinter.CTkLabel(signup_frame, text="Confirm Password", font=("Arial", 13), text_color="#1f2024").pack()
     confirm_password_entry = customtkinter.CTkEntry(
         signup_frame, width=280, corner_radius=12,
-        border_color="#dcdfe3", border_width=2, fg_color="#ffffff", text_color="#dcdfe3",show="*"
+        border_color="#dcdfe3", border_width=2, fg_color="#ffffff", text_color="#000000",show="*"
     )
     confirm_password_entry.pack(pady=(5, 5))
 
