@@ -171,11 +171,27 @@ def signUp_page():
 
 # ========== User's Achievement ==========
 achievements = [
-    {"name": "First Steps", "desc": "Complete your first task", "unlocked": True},
-    {"name": "Explorer", "desc": "Visit all sections", "unlocked": False},
-    {"name": "Master", "desc": "Reach level 10", "unlocked": True},
+    {"name": "Who am i?", "desc": "First badge to achieve after registering an account for the first time", "unlocked": True},
+    {"name": "Bullseye", "desc": "100% Accuracy (Get a perfect Score on a Quiz)", "unlocked": False},
+    {"name": "The Fool", "desc" : "Scored 0 on a Quiz", "unlocked":True},
+    {"name": "Now that's what I call  a Purrrfectionist!", "desc": "Get three perfect scores in three different Categories", "unlocked":False},
+    {"name": "IT Specialist", "desc": "Get a perfect score on the General Category in TryQuizMe", "unlocked":False},
+    {"name": "Achievement Hoarder", "desc": "Collect 20 Achievements", "unlocked":False},
+    {"name": "His/Her Majesty", "desc": "Ranked 1st in the leaderboard", "unlocked":False},
+    {"name": "Duke? I thought you meant Duck!", "desc": "Ranked 2nd in the leaderboard", "unlocked":False},
+    {"name": "Marquess", "desc": "Ranked 3rd in the leaderboard", "unlocked":False},
+    {"name": "Nobles", "desc": "Ranked 4th or 5th in the leaderboard", "unlocked":False},
+    {"name": "First Steps", "desc": "5th Milestone", "unlocked": False},
+    {"name": "Nerd", "desc": "20th Milestone", "unlocked": False},
+    {"name": "Touch Grass", "desc": "50th Milestone", "unlocked": False},
+    {"name": "Sparkly shimmery splendid etc!", "desc": "100th Milestone", "unlocked": False},
+    {"name": "Moar stars to come!", "desc": "150th Milestone", "unlocked": False},
 ]
 # ========== Achievements ===========
+
+#The Fool
+
+    
 
 # Create placeholder images
 def create_placeholder_image(color):
@@ -200,8 +216,8 @@ def Achievements():
     title = customtkinter.CTkLabel(frame, text="🌟 Achievements 🌟", font=("Arial", 30), text_color="#ffffff")
     title.pack(pady=(30, 10))
 
-    tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
-    tree_frame.pack(padx=60, pady=20, fill="both", expand=True)
+    tree_frame = customtkinter.CTkScrollableFrame(frame, width=1000, height=400, fg_color="#1e1e2f")
+    tree_frame.pack(pady=10, fill="both", expand=True)
 
     last_frame = customtkinter.CTkFrame(frame)
     last_frame.pack(padx=100,pady=20)
