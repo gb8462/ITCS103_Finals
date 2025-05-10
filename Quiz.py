@@ -418,7 +418,7 @@ def quizMe():
         main.configure(fg_color="#1f2024")
 
         customtkinter.CTkLabel(main, text="Edit Existing Quiz", font=("Arial", 24)).pack(pady=10)
-
+        
         # Load workbook and get sheet names
         try:
             wb = load_workbook(quiz_file)
@@ -456,13 +456,33 @@ def quizMe():
             data = [[cell.value for cell in row] for row in sheet.iter_rows()]
             isho_create_quiz_page(quiz_name=quiz_name, existing_data=data)
 
+        def delete_quiz():
+            name = quiz_name_entry.get().strip()
+            if not name:
+                messagebox.showerror("Error", "Please enter a quiz name to delete.")
+                return
+
+            wb = load_workbook(quiz_file)
+            if name not in wb.sheetnames:
+                messagebox.showerror("Error", f"Quiz '{name}' does not exist.")
+                return
+
+            confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete the quiz '{name}'?")
+            if confirm:
+                del wb[name]
+                wb.save(quiz_file)
+                messagebox.showinfo("Deleted", f"Quiz '{name}' was deleted successfully!")
+                quizMe()  # or refresh the edit frame
+
         # Buttons
-        customtkinter.CTkButton(main, text="Load Quiz", command=load_selected_quiz).pack(pady=10)
-        customtkinter.CTkButton(main, text="Go Back", command=quizMe).pack(pady=5)
+        customtkinter.CTkButton(main, text="Load Quiz", command=load_selected_quiz).pack(pady=(10,0))
+        delete_button = customtkinter.CTkButton(main, text="Delete Quiz", command=delete_quiz, fg_color="red", hover_color="#aa0000")
+        delete_button.pack(pady=5)
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe).pack(pady=10)
 
     # ========== Buttons ==========
     CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=isho_create_quiz_page)
-    CreateQ.pack(pady=(25,0))
+    CreateQ.pack(pady=(15,0))
     
     customtkinter.CTkButton(dashboard, text="Edit Quiz", command=open_edit_quiz_page).pack(pady=(15,0))
 
@@ -564,7 +584,7 @@ def quizMe():
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save score: {e}")
-
+        
         customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 12), corner_radius=10, width=200).pack(pady=5)
         customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 12), corner_radius=10, width=150).pack(pady=5)
 
