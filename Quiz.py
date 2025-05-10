@@ -337,7 +337,6 @@ def quizMe():
     clear_frame()
     main.title("QuizMe")
     main.configure(fg_color="#010101")
-
     # ========== Dashboard (Difficulty/Category Filter) ==========
     dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color="#dee0e0", width=300)
     dashboard.pack(pady=(5, 20), padx=10, fill="both", side="left")
@@ -348,18 +347,57 @@ def quizMe():
     difficulty = customtkinter.CTkFrame(dashboard, fg_color="#ebeded", border_width=1, border_color="#c9c9c9")
     difficulty.pack()
 
-    selected_difficulty = customtkinter.StringVar(value="All Difficulty")
-    selected_category = customtkinter.StringVar(value="All Category")
-
-    for diff in ["All Difficulty", "Easy", "Medium", "Hard"]:
-        customtkinter.CTkButton( difficulty, text=diff, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2", command=lambda d=diff: [selected_difficulty.set(d), reload_quiz_list()]).pack(pady=1, padx=1)
     customtkinter.CTkLabel(dashboard, text="Category", font=("Arial", 17), text_color="#101010").pack(pady=(25, 0), padx=(0, 135))
-    
     category = customtkinter.CTkFrame(dashboard, fg_color="#ebeded", border_width=1, border_color="#c9c9c9")
     category.pack(pady=0, padx=1)
 
+    # Track selected filter state
+    selected_difficulty = customtkinter.StringVar(value="All Difficulty")
+    selected_category = customtkinter.StringVar(value="All Category")
+
+    # Dictionaries to hold button references
+    difficulty_buttons = {}
+    category_buttons = {}
+
+    # Function to update active button styles
+    def update_filter_buttons():
+        for d, btn in difficulty_buttons.items():
+            if d == selected_difficulty.get():
+                btn.configure(fg_color="#4668f2", text_color="#ffffff")
+            else:
+                btn.configure(fg_color="#ffffff", text_color="#101010")
+
+        for c, btn in category_buttons.items():
+            if c == selected_category.get():
+                btn.configure(fg_color="#4668f2", text_color="#ffffff")
+            else:
+                btn.configure(fg_color="#ffffff", text_color="#101010")
+
+    # Filter handlers
+    def select_difficulty(d):
+        selected_difficulty.set(d)
+        update_filter_buttons()
+        reload_quiz_list()
+
+    def select_category(c):
+        selected_category.set(c)
+        update_filter_buttons()
+        reload_quiz_list()
+
+    # Create difficulty buttons
+    for diff in ["All Difficulty", "Easy", "Medium", "Hard"]:
+        btn = customtkinter.CTkButton( difficulty, text=diff, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2", command=lambda d=diff: select_difficulty(d))
+        btn.pack(pady=1, padx=1)
+        difficulty_buttons[diff] = btn
+
+    # Create category buttons
     for cat in ["All Category", "General", "Web Development", "Cryptography", "Python"]:
-        customtkinter.CTkButton( category, text=cat, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2", command=lambda c=cat: [selected_category.set(c), reload_quiz_list()]).pack(pady=1, padx=1)    
+        btn = customtkinter.CTkButton( category, text=cat, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2", command=lambda c=cat: select_category(c))
+        btn.pack(pady=1, padx=1)
+        category_buttons[cat] = btn
+
+    # Highlight the initial selected filters
+    update_filter_buttons()
 
     # ========== Create Quiz ==========
     def isho_create_quiz_page(quiz_name=None, existing_data=None):
