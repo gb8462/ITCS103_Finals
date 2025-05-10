@@ -180,7 +180,7 @@ def Leaderboard():
     frame = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0)
     frame.pack(fill='both', expand=True)
 
-    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboard", font=("Arial", 32), text_color="#ffffff")
+    title = customtkinter.CTkLabel(frame, text="🏆 Leaderboards", font=("Arial", 30), text_color="#ffffff")
     title.pack(pady=(30, 10))
 
     tree_frame = customtkinter.CTkFrame(frame, fg_color="#2e2f33", corner_radius=15)
@@ -222,6 +222,7 @@ def Leaderboard():
         messagebox.showerror("Error", f"Failed to load leaderboard: {e}")
 
     customtkinter.CTkButton(frame, text="Back to Dashboard", command=Dashboard, fg_color="#4668f2", hover_color="#314ad1", text_color="#fff",font=("Arial", 14), corner_radius=8, width=180).pack(pady=(0, 20))
+
 # ========== Dashboard ==========
 def Dashboard():
     clear_frame()
