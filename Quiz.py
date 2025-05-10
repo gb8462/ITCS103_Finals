@@ -13,13 +13,11 @@ customtkinter.set_appearance_mode('dark')
 
 main.configure(fg_color="#1f2024")
 
-
 quiz_file = "quizzes.xlsx"
 if not os.path.exists(quiz_file):
     wb = Workbook()
     sheet = wb.active
     wb.save(quiz_file)
-
 
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
@@ -275,101 +273,75 @@ def quizMe():
     main.title("QuizMe")
     main.configure(fg_color="#010101")
 
-    # ========== Difficulty ==========
-    dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color='#dee0e0', width=300)
-    dashboard.pack(pady=(5,20), padx=10, fill="both",side='left')
+    # ========== Dashboard (Difficulty/Category Filter) ==========
+    dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color="#dee0e0", width=300)
+    dashboard.pack(pady=(5, 20), padx=10, fill="both", side="left")
 
-    label = customtkinter.CTkLabel(dashboard,text="QuizMe",font=('Arial',35), text_color='#101010')
-    label.pack(pady=(15,15), padx=70)
+    customtkinter.CTkLabel(dashboard, text="QuizMe", font=("Arial", 35), text_color="#101010").pack(pady=(15, 15), padx=70)
 
-    label = customtkinter.CTkLabel(dashboard,text="Difficulty",font=('Arial',17), text_color='#101010')
-    label.pack(pady=(25,0), padx=(0,135))
-
-    difficulty = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
+    customtkinter.CTkLabel(dashboard, text="Difficulty", font=("Arial", 17), text_color="#101010").pack(pady=(25, 0), padx=(0, 135))
+    difficulty = customtkinter.CTkFrame(dashboard, fg_color="#ebeded", border_width=1, border_color="#c9c9c9")
     difficulty.pack()
 
     for diff in ["All Difficulty", "Easy", "Medium", "Hard"]:
-        button = customtkinter.CTkButton(difficulty, text=diff, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
-        button.pack(pady=1, padx=1)
+        customtkinter.CTkButton(difficulty, text=diff, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2").pack(pady=1, padx=1)
 
-    label = customtkinter.CTkLabel(dashboard,text="Category",font=('Arial',17), text_color='#101010')
-    label.pack(pady=(25,0), padx=(0,135))
-
-    # ========== Category ========== 
-    category = customtkinter.CTkFrame(dashboard, fg_color='#ebeded', border_width=1, border_color='#c9c9c9', height=230)
+    customtkinter.CTkLabel(dashboard, text="Category", font=("Arial", 17), text_color="#101010").pack(pady=(25, 0), padx=(0, 135))
+    category = customtkinter.CTkFrame(dashboard, fg_color="#ebeded", border_width=1, border_color="#c9c9c9")
     category.pack(pady=0, padx=1)
 
     for cat in ["All Category", "General", "Web Development", "Cryptography", "Python"]:
-        button = customtkinter.CTkButton(category, text=cat, anchor='w', height=35, corner_radius=0, width=200, fg_color='#ffffff', text_color='#101010', hover_color='#4668f2')
-        button.pack(pady=1, padx=1)
-    
-    # ========== Create Quiz Function ========== 
-    def isho_create_quiz_page(quiz_name=None, existing_data=None):
+        customtkinter.CTkButton(category, text=cat, anchor="w", height=35, corner_radius=0, width=200, fg_color="#ffffff", text_color="#101010", hover_color="#4668f2").pack(pady=1, padx=1)
 
+    # ========== Create Quiz Page ==========
+    def isho_create_quiz_page(quiz_name=None, existing_data=None):
         clear_frame()
         main.configure(fg_color="#1f2024")
-        
-        question_entries = []
-        choice_entries = []
-        correct_answers = []
 
-        # links the local ones to global for saving later
         global isho_quiz_name_entry, isho_question_entries, isho_choice_entries, isho_correct_answers
-        isho_question_entries = question_entries
-        isho_choice_entries = choice_entries
-        isho_correct_answers = correct_answers
+        isho_question_entries, isho_choice_entries, isho_correct_answers = [], [], []
 
-        customtkinter.CTkLabel(main, text="Create Quiz", font=("Arial", 24)).pack(pady=10)
-        customtkinter.CTkLabel(main, text="Enter Quiz Name:").pack()
-        quiz_name_entry = customtkinter.CTkEntry(main, width=300)
+        customtkinter.CTkLabel(main, text="Create Quiz", font=("Arial", 24), text_color="#ffffff").pack(pady=10)
+        customtkinter.CTkLabel(main, text="Enter Quiz Name:", text_color="#ffffff").pack()
+
+        isho_quiz_name_entry = customtkinter.CTkEntry(main, width=300)
         if quiz_name:
-            quiz_name_entry.insert(0, quiz_name)
-            quiz_name_entry.configure(state="disabled")  # Prevent renaming
-
-        quiz_name_entry.pack(pady=5)
-        isho_quiz_name_entry = quiz_name_entry
+            isho_quiz_name_entry.insert(0, quiz_name)
+            isho_quiz_name_entry.configure(state="disabled")
+        isho_quiz_name_entry.pack(pady=5)
 
         questions_container = customtkinter.CTkScrollableFrame(main, width=1000, height=400)
         questions_container.pack(pady=10, fill="both", expand=True)
-    
-        # ========== Adding Questions ==========
+
         def add_question(prefill=None):
-            
-            frame = customtkinter.CTkFrame(questions_container)
+            frame = customtkinter.CTkFrame(questions_container, fg_color="#2a2b2e")
             frame.pack(pady=15, fill="x", padx=20)
 
             q_entry = customtkinter.CTkEntry(frame, width=600, placeholder_text="Enter question")
             q_entry.pack(pady=4)
-            if prefill:
-                q_entry.insert(0, prefill[0])
+            if prefill: q_entry.insert(0, prefill[0])
 
             choices = []
             for i in range(4):
                 entry = customtkinter.CTkEntry(frame, width=500, placeholder_text=f"Choice {chr(65 + i)}")
                 entry.pack(pady=5)
-                if prefill:
-                    entry.insert(0, prefill[i + 1])
+                if prefill: entry.insert(0, prefill[i + 1])
                 choices.append(entry)
 
-            correct_var = customtkinter.IntVar(value=0)
-            if prefill:
-                correct_var.set(prefill[5])
-
+            correct_var = customtkinter.IntVar(value=prefill[5] if prefill else 0)
             for i in range(4):
-                radiobuttn = customtkinter.CTkRadioButton(frame, text=f"Correct: Choice {chr(65+i)}", variable=correct_var, value=i)
-                radiobuttn.pack(anchor="w", pady=5)
+                customtkinter.CTkRadioButton(frame, text=f"Correct: Choice {chr(65+i)}", variable=correct_var, value=i, text_color="#ccc", fg_color="#76b5c5", hover_color="#4668f2").pack(anchor="w", pady=5)
 
-            question_entries.append(q_entry)
-            choice_entries.append(choices)
-            correct_answers.append(correct_var)
-        
-        # ========== Remove Last Questions ==========
+            isho_question_entries.append(q_entry)
+            isho_choice_entries.append(choices)
+            isho_correct_answers.append(correct_var)
+
         def remove_last_question():
-            if question_entries:
-                question_entries.pop().master.destroy()
-                choice_entries.pop()
-                correct_answers.pop()
-        
+            if isho_question_entries:
+                isho_question_entries.pop().master.destroy()
+                isho_choice_entries.pop()
+                isho_correct_answers.pop()
+
         def save_quiz():
             name = isho_quiz_name_entry.get().strip()
             if not name:
@@ -380,9 +352,8 @@ def quizMe():
             if name in wb.sheetnames and not existing_data:
                 messagebox.showerror("Error", "Quiz already exists.")
                 return
-
             if name in wb.sheetnames and existing_data:
-                del wb[name]  # delete old sheet before overwriting
+                del wb[name]
 
             sheet = wb.create_sheet(title=name)
             sheet.append(["Question", "ChoiceA", "ChoiceB", "ChoiceC", "ChoiceD", "CorrectIndex"])
@@ -395,22 +366,19 @@ def quizMe():
             wb.save(quiz_file)
             messagebox.showinfo("Success", "Quiz saved successfully!")
             quizMe()
-    
+
         button_row = customtkinter.CTkFrame(main)
         button_row.pack(pady=10)
-
         customtkinter.CTkButton(button_row, text="Add Question", command=add_question).pack(side="left", padx=5)
         customtkinter.CTkButton(button_row, text="Remove Last Question", command=remove_last_question).pack(side="left", padx=5)
         customtkinter.CTkButton(button_row, text="Save Quiz", command=save_quiz).pack(side="left", padx=5)
 
         if existing_data:
-            for row in existing_data[1:]:  # skip header row
-                add_question(prefill=row)
+            for row in existing_data[1:]: add_question(prefill=row)
         else:
             add_question()
-        
-        back_button = customtkinter.CTkButton(main, text="Go Back", command=quizMe)
-        back_button.pack(pady=5)
+
+        customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 12), corner_radius=10, width=150).pack(pady=5)
     
     def open_edit_quiz_page():
         clear_frame()
@@ -515,8 +483,11 @@ def quizMe():
     def take_quiz(quiz_name):
         clear_frame()
         main.configure(fg_color="#1f2024")
+
+        # Quiz title
         customtkinter.CTkLabel(main, text=f"{quiz_name} Quiz", font=("Arial", 28), text_color="#ffffff").pack(pady=20)
 
+        # Scrollable container for questions
         quiz_frame = customtkinter.CTkScrollableFrame(main, width=800, height=500, fg_color="#2a2b2e")
         quiz_frame.pack(pady=10)
 
@@ -534,48 +505,38 @@ def quizMe():
             choices = [choice_a, choice_b, choice_c, choice_d]
             valid_rows.append((i, correct_index))
 
+            # Question text
             customtkinter.CTkLabel(quiz_frame, text=f"Q{i}: {q_text}", font=("Arial", 18), text_color="#ffffff", wraplength=700, justify="left").pack(anchor="w", pady=(15, 5), padx=20)
 
             var = customtkinter.IntVar(value=-1)
             selected_answers.append(var)
 
+            # Answer choices
             for idx, choice in enumerate(choices):
                 if choice is None:
                     continue
-                customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#1a1b1e", font=("Arial", 14)).pack(anchor="w", padx=40, pady=2)
+                customtkinter.CTkRadioButton(quiz_frame, text=choice, variable=var, value=idx, text_color="#ccc", hover_color="#4668f2", fg_color="#76b5c5", font=("Arial", 14)).pack(anchor="w", padx=40, pady=2)
 
             ttk.Separator(quiz_frame, orient="horizontal").pack(fill="x", pady=10, padx=20)
 
+        # Submission logic
         def submit_answers():
-            score, total = 0, len(selected_answers)
-
-            for i, (row_idx, correct) in enumerate(valid_rows):
-                if selected_answers[i].get() == correct:
-                    score += 1
-
-            messagebox.showinfo("Quiz Result", f"You got {score} out of {total} correct!")
+            score = sum(1 for i, (_, correct) in enumerate(valid_rows) if selected_answers[i].get() == correct)
+            messagebox.showinfo("Quiz Result", f"You got {score} out of {len(selected_answers)} correct!")
 
             try:
                 user_wb = openpyxl.load_workbook("users.xlsx")
                 user_sheet = user_wb.active
-
                 headers = [cell.value for cell in user_sheet[1]]
 
-                # If "Score" column doesn't exist, add it
+                score_col_index = headers.index("Score") + 1 if "Score" in headers else len(headers) + 1
                 if "Score" not in headers:
-                    user_sheet.cell(row=1, column=len(headers) + 1, value="Score")
-                    score_col_index = len(headers) + 1
-                else:
-                    score_col_index = headers.index("Score") + 1
+                    user_sheet.cell(row=1, column=score_col_index, value="Score")
 
-                # Find the row for the current user and update the score
                 for row in user_sheet.iter_rows(min_row=2):
                     if row[0].value == current_user:
-                        current_score = row[score_col_index - 1].value
-                        if current_score is None:
-                            current_score = 0
-                        new_score = current_score + score
-                        user_sheet.cell(row=row[0].row, column=score_col_index, value=new_score)
+                        current_score = row[score_col_index - 1].value or 0
+                        user_sheet.cell(row=row[0].row, column=score_col_index, value=current_score + score)
                         break
 
                 user_wb.save("users.xlsx")
@@ -583,11 +544,14 @@ def quizMe():
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to save score: {e}")
-        
+
+        # Action buttons
         customtkinter.CTkButton(main, text="Submit Quiz", command=submit_answers, fg_color="#4668f2", hover_color="#314ad1", font=("Arial", 12), corner_radius=10, width=200).pack(pady=5)
         customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", font=("Arial", 12), corner_radius=10, width=150).pack(pady=5)
 
+    # Load quizzes on start
     load_quizzes()
+
 
 # ========== Start ==========
 initialize_database()
