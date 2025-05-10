@@ -263,10 +263,6 @@ achievements = [
 ]
 # ========== Achievements ===========
 
-#The Fool
-
-    
-
 # Create placeholder images
 def create_placeholder_image(color):
     img = Image.new("RGB", (64, 64), color=color)
@@ -413,7 +409,8 @@ def Dashboard():
     customtkinter.CTkButton(background, text="QuizMe", command=quizMe, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(170, 5))
     customtkinter.CTkButton(background, text="Achievements", command=Achievements, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
     customtkinter.CTkButton(background, text="Leaderboards", command=Leaderboard, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
-    customtkinter.CTkButton(background, text="Quit", command=close_window, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
+    customtkinter.CTkButton(background, text="Logout", command=login_page, corner_radius=3, width=350, height=40, font=('Arial', 20), fg_color='#353A3E', text_color='#E0E0E0', hover_color='#1A1A1A').pack(pady=(10, 5))
+
 
 # Global lists for Create Quiz
 
@@ -490,7 +487,7 @@ def quizMe():
     update_filter_buttons()
 
     # ========== Create Quiz ==========
-    def isho_create_quiz_page(quiz_name=None, existing_data=None):
+    def isho_create_quiz_page(quiz_name, existing_data, metadata):
         clear_frame()
         main.configure(fg_color="#1e1e2f")
 
@@ -712,7 +709,7 @@ def quizMe():
         customtkinter.CTkButton(button_row, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#3a3a3a", width=140).pack(side="left", padx=8)
 
     # ========== Buttons ==========
-    CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=isho_create_quiz_page)
+    CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=lambda: isho_create_quiz_page(quiz_name="", existing_data=[], metadata=["Category", "Difficulty"]))
     CreateQ.pack(pady=(15,0))
     
     customtkinter.CTkButton(dashboard, text="Edit Quiz", command=open_edit_quiz_page).pack(pady=(15,0))
