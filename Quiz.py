@@ -379,7 +379,8 @@ def quizMe():
 
             wb.save(quiz_file)
             messagebox.showinfo("Success", "Quiz saved successfully!")
-
+            quizMe()
+    
         button_row = customtkinter.CTkFrame(main)
         button_row.pack(pady=10)
 
@@ -404,7 +405,7 @@ def quizMe():
     Quiz.pack(pady=(5, 20), padx=(0, 10), side='right', fill="both", expand=True)
 
     label = customtkinter.CTkLabel(Quiz, text="Available Quizzes", font=("Arial", 20), text_color="#1f2024")
-    label.pack()
+    label.pack(pady=10)
 
     def load_quizzes():
         try:
