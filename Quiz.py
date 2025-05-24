@@ -377,7 +377,6 @@ def Leaderboard():
 def Dashboard():
     clear_frame()
     main.title("TryQuizMe")
-    main.configure(fg_color="#010101")
 
     topbar = customtkinter.CTkFrame(main, fg_color="#353A3E", corner_radius=0, height=60)
     topbar.pack(pady=0, padx=0, fill="both")
@@ -424,7 +423,7 @@ isho_correct_answers = []
 def quizMe():
     clear_frame()
     main.title("QuizMe")
-    main.configure(fg_color="#010101")
+
     # ========== Dashboard (Difficulty/Category Filter) ==========
     dashboard = customtkinter.CTkFrame(main, corner_radius=10, fg_color="#dee0e0", width=300)
     dashboard.pack(pady=(5, 20), padx=10, fill="both", side="left")
@@ -611,7 +610,6 @@ def quizMe():
         customtkinter.CTkButton(controls, text="+ Add Question", command=add_question, fg_color="#38b000", hover_color="#2e8b00", font=("Segoe UI", 12)).pack(side="left", padx=10)
         customtkinter.CTkButton(controls, text="- Remove Last", command=remove_last_question, fg_color="#e63946", hover_color="#c82333", font=("Segoe UI", 12)).pack(side="left", padx=10)
         customtkinter.CTkButton(controls, text="💾 Save Quiz", command=save_quiz, fg_color="#5e60ce", hover_color="#4a4ccc", font=("Segoe UI", 12)).pack(side="left", padx=10)
-
         customtkinter.CTkButton(main, text="Go Back", command=quizMe, fg_color="#6c6c6c", hover_color="#4d4d4d", font=("Segoe UI", 12), corner_radius=10, width=150).pack(pady=3)
 
     def open_edit_quiz_page():
