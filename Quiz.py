@@ -143,22 +143,11 @@ def login_page():
     main.bind('<Return>', lambda event: on_login())
 
     # Login Button
-    customtkinter.CTkButton(
-        login_frame, text="Login", font=("Arial", 16, "bold"), corner_radius=20, text_color="#ffffff",
-        fg_color="#4668f2", hover_color="#314ad1", width=150, command=on_login
-    ).pack(pady=(20, 0))
-
-    customtkinter.CTkLabel(
-        login_frame, text="or", font=("Arial", 12), text_color="#888888"
-    ).pack(pady=(5, 5))
+    customtkinter.CTkButton( login_frame, text="Login", font=("Arial", 16, "bold"), corner_radius=20, text_color="#ffffff", fg_color="#4668f2", hover_color="#314ad1", width=150, command=on_login).pack(pady=(20, 0))
+    customtkinter.CTkLabel(login_frame, text="or", font=("Arial", 12), text_color="#888888").pack(pady=(5, 5))
 
     # Sign Up Button
-    customtkinter.CTkButton(
-        login_frame, text="Sign up", font=("Arial", 15), corner_radius=20, text_color="#4668f2",
-        fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=150,
-        command=signUp_page
-    ).pack(pady=(0, 20))
-
+    customtkinter.CTkButton(login_frame, text="Sign up", font=("Arial", 15), corner_radius=20, text_color="#4668f2",fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=150,command=signUp_page).pack(pady=(0, 20))
 
 # ======== Sign Up Page ========
 def signUp_page():
@@ -167,33 +156,22 @@ def signUp_page():
     signup_frame = customtkinter.CTkFrame(main, corner_radius=20, fg_color="#f7f9fc")
     signup_frame.pack(pady=100, padx=300, fill="both", expand=True)
 
-    customtkinter.CTkLabel(
-        signup_frame, text="Sign Up", font=("Arial", 50, "bold"), text_color="#1f2024"
-    ).pack(pady=(40, 20))
+    customtkinter.CTkLabel(signup_frame, text="Sign Up", font=("Arial", 50, "bold"), text_color="#1f2024").pack(pady=(40, 20))
 
     # Username
     customtkinter.CTkLabel(signup_frame, text="Username", font=("Arial", 13), text_color="#1f2024").pack()
-    username_entry = customtkinter.CTkEntry(
-        signup_frame, width=280, corner_radius=12, border_color="#dcdfe3",
-        border_width=2, fg_color="#ffffff",text_color="#000000"
-    )
+    username_entry = customtkinter.CTkEntry(signup_frame, width=280, corner_radius=12, border_color="#dcdfe3",border_width=2, fg_color="#ffffff",text_color="#000000")
     username_entry.pack(pady=(5, 10))
 
     # Password
     customtkinter.CTkLabel(signup_frame, text="Password", font=("Arial", 13), text_color="#1f2024").pack()
     password_var = customtkinter.StringVar()
-    password_entry = customtkinter.CTkEntry(
-        signup_frame, textvariable=password_var, width=280, corner_radius=12,
-        border_color="#dcdfe3", border_width=2, text_color="#000000",fg_color="#ffffff", show="*"
-    )
+    password_entry = customtkinter.CTkEntry(signup_frame, textvariable=password_var, width=280, corner_radius=12,border_color="#dcdfe3", border_width=2, text_color="#000000",fg_color="#ffffff", show="*")
     password_entry.pack(pady=(5, 10))
 
     # Confirm Password
     customtkinter.CTkLabel(signup_frame, text="Confirm Password", font=("Arial", 13), text_color="#1f2024").pack()
-    confirm_password_entry = customtkinter.CTkEntry(
-        signup_frame, width=280, corner_radius=12,
-        border_color="#dcdfe3", border_width=2, fg_color="#ffffff", text_color="#000000",show="*"
-    )
+    confirm_password_entry = customtkinter.CTkEntry(signup_frame, width=280, corner_radius=12,border_color="#dcdfe3", border_width=2, fg_color="#ffffff", text_color="#000000",show="*")
     confirm_password_entry.pack(pady=(5, 5))
 
     # Toggle Passwords
@@ -207,10 +185,7 @@ def signUp_page():
             confirm_password_entry.configure(show="*")
             toggle_signup_button.configure(text="Show")
 
-    toggle_signup_button = customtkinter.CTkButton(
-        signup_frame, text="Show", width=60, height=20, font=("Arial", 11),
-        corner_radius=10, fg_color="#dcdfe3", text_color="#1f2024", command=toggle_signup_password
-    )
+    toggle_signup_button = customtkinter.CTkButton(signup_frame, text="Show", width=60, height=20, font=("Arial", 11),corner_radius=10, fg_color="#dcdfe3", text_color="#1f2024", command=toggle_signup_password)
     toggle_signup_button.pack(pady=(0, 15))
 
     error_label = customtkinter.CTkLabel(signup_frame, text="", text_color="#e74c3c", font=("Arial", 12))
@@ -232,17 +207,10 @@ def signUp_page():
             error_label.configure(text="Username already exists!")
 
     # Create Account Button
-    customtkinter.CTkButton(
-        signup_frame, text="Create Account", font=("Arial", 15, "bold"), corner_radius=20, text_color="#ffffff",
-        fg_color="#4668f2", hover_color="#314ad1", width=170, command=on_create_account
-    ).pack(pady=(10, 5))
+    customtkinter.CTkButton(signup_frame, text="Create Account", font=("Arial", 15, "bold"), corner_radius=20, text_color="#ffffff",fg_color="#4668f2", hover_color="#314ad1", width=170, command=on_create_account).pack(pady=(10, 5))
 
     # Back to Login Button
-    customtkinter.CTkButton(
-        signup_frame, text="Back to Login", font=("Arial", 14), corner_radius=20, text_color="#4668f2",
-        fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=170,
-        command=login_page
-    ).pack(pady=(0, 20))
+    customtkinter.CTkButton(signup_frame, text="Back to Login", font=("Arial", 14), corner_radius=20, text_color="#4668f2",fg_color="#e4e6ed", hover_color="#c9ccd4", border_width=1, border_color="#4668f2", width=170,command=login_page).pack(pady=(0, 20))
 
 # ========== User's Achievement ==========
 achievements = [
