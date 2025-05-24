@@ -10,6 +10,7 @@ main = customtkinter.CTk()
 main.title("TryQuizMe login")
 main.geometry("1100x680")
 customtkinter.set_appearance_mode('dark')
+customtkinter.set_default_color_theme("blue")
 
 main.configure(fg_color="#1f2024")
 
@@ -632,7 +633,7 @@ def quizMe():
         quiz_listbox = customtkinter.CTkScrollableFrame(selection_frame, width=550, height=400, fg_color="#3a3b3e")
         quiz_listbox.pack(pady=20,padx=20)
 
-        customtkinter.CTkLabel(quiz_listbox, text="Available Quizzes", font=("Arial", 16), text_color="#ffffff").pack(pady=(10, 5))
+        customtkinter.CTkLabel(quiz_listbox, text="Select A Quiz To Edit", font=("Arial", 16), text_color="#ffffff").pack(pady=(10, 5))
         selected_quiz = customtkinter.StringVar(value="")
 
         def select_quiz(name):
@@ -655,35 +656,61 @@ def quizMe():
         for q in quiz_names:
             btn = customtkinter.CTkButton(quiz_listbox, text=q, anchor="w", fg_color="#444", text_color="#ffffff", hover_color="#4668f2", width=460, command=lambda name=q: select_quiz(name))
             btn.pack(pady=3, padx=10)
+        
+        def delQ():
+            clear_frame()
+            customtkinter.CTkLabel(main, text="Delete Quiz", font=("Arial", 28), text_color="#ffffff").pack(pady=(20, 10))
+            # Reload workbook and get quiz names
+            try:
+                wb = load_workbook(quiz_file)
+                quiz_names = wb.sheetnames
+            except FileNotFoundError:
+                quiz_names = []
 
-        # Quiz name entry inside the same selection frame
-        customtkinter.CTkLabel(selection_frame, text="Enter Quiz Name:", font=("Arial", 14), text_color="#ffffff").pack(pady=(5, 0))
-        quiz_entry = customtkinter.CTkEntry(selection_frame, width=300)
-        quiz_entry.pack(pady=(5, 5))
+            selection_frame = customtkinter.CTkFrame(main, fg_color="#2a2b2e", corner_radius=12)
+            selection_frame.pack(pady=10, padx=20, fill="both", expand=True)
 
-        # Button action
+            # Scrollable list of quizzes
+            quiz_list_frame = customtkinter.CTkScrollableFrame(selection_frame, width=550, height=400, fg_color="#3a3b3e")
+            quiz_list_frame.pack(pady=(20, 10), padx=20)
 
-        def delete_quiz():
-            name = quiz_entry.get().strip()
-            if not name:
-                messagebox.showerror("Error", "Please enter a quiz name to delete.")
-                return
-            if name not in wb.sheetnames:
-                messagebox.showerror("Error", f"Quiz '{name}' does not exist.")
-                return
-            confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete the quiz '{name}'?")
-            if confirm:
-                del wb[name]
-                wb.save(quiz_file)
-                messagebox.showinfo("Deleted", f"Quiz '{name}' was deleted successfully!")
-                quizMe()
+            customtkinter.CTkLabel(quiz_list_frame, text="Select a Quiz to Delete", font=("Arial", 16), text_color="#ffffff").pack(pady=(10, 5))
 
-        # Buttons section
-        button_row = customtkinter.CTkFrame(main, fg_color="transparent")
-        button_row.pack(pady=(0,4))
+            quiz_entry = customtkinter.CTkEntry(selection_frame, width=300, corner_radius=8, font=("Arial", 13), placeholder_text="e.g. Python 1")
+            quiz_entry.pack(pady=(0, 12))
 
-        customtkinter.CTkButton(button_row, text="Delete Quiz", command=delete_quiz, fg_color="#ef4444", hover_color="#dc2626", width=140).pack(side="left", padx=3)
-        customtkinter.CTkButton(button_row, text="Go Back", command=quizMe, fg_color="#9ca3af",hover_color="#6b7280", width=140).pack(side="left", padx=3)
+            # Quiz button click fills the entry
+            for q in quiz_names:
+                customtkinter.CTkButton(quiz_list_frame,text=q,anchor="w",fg_color="#444",text_color="#ffffff",hover_color="#dc2626",width=460,command=lambda name=q: quiz_entry.delete(0, 'end') or quiz_entry.insert(0, name)).pack(pady=3, padx=10)
+
+            def delete_quiz():
+                name = quiz_entry.get().strip()
+                if not name:
+                    messagebox.showerror("Error", "Please enter a quiz name to delete.")
+                    return
+                if name not in wb.sheetnames:
+                    messagebox.showerror("Error", f"Quiz '{name}' does not exist.")
+                    return
+                confirm = messagebox.askyesno("Confirm Delete", f"Are you sure you want to delete the quiz '{name}'?")
+                if confirm:
+                    del wb[name]
+                    wb.save(quiz_file)
+                    messagebox.showinfo("Deleted", f"Quiz '{name}' was deleted successfully!")
+                    quizMe()
+
+            # Buttons
+            button_row = customtkinter.CTkFrame(selection_frame, fg_color="transparent")
+            button_row.pack(pady=(10, 10))
+
+            customtkinter.CTkButton(button_row, text="🗑 Delete", command=delete_quiz, fg_color="#ef4444", hover_color="#dc2626", text_color="#ffffff", width=140, corner_radius=8, font=("Arial", 14, "bold")).pack(side="left", padx=6)
+            customtkinter.CTkButton(button_row, text="← Go Back", command=open_edit_quiz_page, fg_color="#9ca3af", hover_color="#6b7280", text_color="#000000", width=140, corner_radius=8, font=("Arial", 14)).pack(side="left", padx=6)
+
+        # Buttons
+        button_row = customtkinter.CTkFrame(selection_frame, fg_color="transparent")
+        button_row.pack(pady=(10, 10))
+
+        customtkinter.CTkButton(button_row, text="🗑 Delete A Quiz", command=delQ, fg_color="#ef4444", hover_color="#dc2626", text_color="#ffffff", width=140, corner_radius=8, font=("Arial", 14, "bold")).pack(side="left", padx=6)
+        customtkinter.CTkButton(button_row, text="← Go Back", command=quizMe, fg_color="#9ca3af", hover_color="#6b7280", text_color="#000000", width=140, corner_radius=8, font=("Arial", 14)).pack(side="left", padx=6)
 
     # ========== Buttons ==========
     CreateQ = customtkinter.CTkButton(dashboard, text='Create Quiz', command=lambda: isho_create_quiz_page(quiz_name="", existing_data=[], metadata=["Category", "Difficulty"]))
